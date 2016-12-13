@@ -1,3 +1,55 @@
+.email-subscribe-wrapper {
+
+  .content {
+    border: 1px solid rgba(black, 0.2);
+    padding: 15px 20px;
+    padding-bottom: 0px;
+
+    .title {
+      font-weight: bold;
+      line-height: 20px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      margin-top: 6px;
+      line-height: 18px;
+    }
+
+    #mc_embed_signup form {
+      padding: 15px 0px 5px 0px;
+
+    }
+
+    #mc-embedded-subscribe {
+      width: 100%;
+      background-color: black;
+      border-radius: 0px;
+    }
+
+    #mce-EMAIL {
+      width: 100%;
+      border-radius: 0px;
+      border-color: rgba(black, 0.2);
+      height: 35px;
+      padding-left: 10px;
+    }
+  }
+
+  position: relative;
+  max-width: 620px;
+  margin-bottom: 40px;
+
+  @media (min-width: 1300px) {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    margin-bottom: 0px;
+    max-width: 350px;
+  }
+}
+
+
 .endpoints {
 
   .endpoint {
@@ -36,5 +88,4 @@
     }
 
   }
-
 }
