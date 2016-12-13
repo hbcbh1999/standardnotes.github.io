@@ -1,0 +1,40 @@
+.endpoints {
+
+  .endpoint {
+    margin-bottom: 30px;
+
+    .path {
+      font-weight: bold;
+      margin-bottom: 2px;
+    }
+
+    $meta-indent: 12px;
+
+    .desc {
+      margin-left: $meta-indent;
+    }
+
+    .params {
+      font-style: italic;
+      margin-left: $meta-indent;
+    }
+
+    .responses {
+      code {
+        font-size: 13px;
+      }
+      font-size: 15px;
+
+      border-top: 1px solid black;
+      margin-top: 8px;
+      padding-top: 6px;
+      margin-left: $meta-indent;
+
+      .response {
+
+      }
+    }
+
+  }
+
+}
