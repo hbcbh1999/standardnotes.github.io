@@ -266,6 +266,7 @@
       <p>
         A group or a note with a presentation can be accessed by the presentation's
         <code>url</code>,
+        which the server computes and returns with the presentation payload.
       </p>
       <p>Notes with a presentation are stored on the server without client-side encryption.</p>
       <table>
@@ -496,13 +497,17 @@
           <code>uip</code>
           before sending to server as
           <code>password</code>:
-          <code>uip</code>
-          using PBKDF2 with 3000 iterations, SHA512 as hashing algorithm, and user's email as salt.
-          b. Split result from (a) in two halves:
-          - First half will be the
-          <code>password</code>
-          sent to the server.
-          - Second half will be the user's global encryption key (<code>gk</code>) (stored locally and never sent to server.)
+          <ul>
+            a. Stretch
+            <code>uip</code>
+            using PBKDF2 with 3000 iterations, SHA512 as hashing algorithm, and user's email as salt.
+            <br>
+            b. Split result from (a) in two halves:
+            - First half will be the
+            <code>password</code>
+            sent to the server.
+            - Second half will be the user's global encryption key (<code>gk</code>) (stored locally and never sent to server.)
+          </ul>
         </li>
       </ol>
       <h2>
@@ -545,6 +550,7 @@
           <code>loc_eek</code>
           to the server. (Do not send
           <code>ek</code>,
+          which can be used to decrypt the note.)
         </li>
       </ol>
       <p>
@@ -562,6 +568,7 @@
         <code>ek</code>
         will have to be re-encrypted with the new
         <code>gk</code>,
+        and not the entire contents of the note.
       </p>
       <p>
         <strong>Server-side:</strong>
@@ -573,6 +580,7 @@
           <code>content</code>
           using server known key and store as
           <code>enc_content</code>.
+          Decrypt before sending back to client as
           <code>content</code>.
         </li>
       </ol>
