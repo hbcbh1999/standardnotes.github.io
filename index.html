@@ -9,57 +9,122 @@
     <script src='https://code.angularjs.org/1.5.8/angular.js'></script>
     <script src='javascripts/rest_api.js'></script>
     <script src='javascripts/app.js'></script>
+    <script src='javascripts/gumshoe.min.js'></script>
   </head>
   <body ng-controller='AppCtrl'>
-    <section class='page-header'>
-      <h1 class='project-name'>Standard Notes</h1>
-      <h2 class='project-tagline'>A Decentralized Personal Notes / Simple Blogging System</h2>
-      <div class='email-subscribe-wrapper'>
-        <div class='content'>
-          <div class='title'>Want to be involved in the future of notes?</div>
-          <div class='subtitle'>Subscribe to Standard Notes announcements.</div>
-          <!-- Begin MailChimp Signup Form -->
-          <link href='//cdn-images.mailchimp.com/embedcode/slim-10_7.css' rel='stylesheet' type='text/css'>
-          <style>
-            #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width: 100%;}
-            /* Add your own MailChimp form style overrides in your site stylesheet or in this style block.
-               We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */
-          </style>
-          <div id='mc_embed_signup'>
-            <form action='//standardnotes.us14.list-manage.com/subscribe/post?u=f703bdd7fd7cd0923a94b3bd3&amp;id=8523dd24a8' class='validate' id='mc-embedded-subscribe-form' method='post' name='mc-embedded-subscribe-form' novalidate='' target='_blank'>
-              <div id='mc_embed_signup_scroll'>
-                <input class='email' id='mce-EMAIL' name='EMAIL' placeholder='email address' required='' type='email' value=''>
-                <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups -->
-                <div aria-hidden='true' style='position: absolute; left: -5000px;'>
-                  <input name='b_f703bdd7fd7cd0923a94b3bd3_8523dd24a8' tabindex='-1' type='text' value=''>
+    <section class='main-content'>
+      <ul class='menu' data-gumshoe=''>
+        <li>
+          <a href='#preamble'>Preamble</a>
+        </li>
+        <li>
+          <a href='#implementations'>Implementations</a>
+        </li>
+        <li>
+          <a href='#introduction'>Introduction</a>
+        </li>
+        <li>
+          <a href='#models'>Models</a>
+          <ul class='no-bullets nested'>
+            <li>
+              <a href='#user'>User</a>
+            </li>
+            <li>
+              <a href='#notes'>Notes</a>
+            </li>
+            <li>
+              <a href='#groups'>Groups</a>
+            </li>
+            <li>
+              <a href='#presentations'>Presentations</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href='#api'>REST API</a>
+          <ul class='no-bullets nested'>
+            <li>
+              <a href='#apiauth'>Auth</a>
+            </li>
+            <li>
+              <a href='#apiusers'>Users</a>
+            </li>
+            <li>
+              <a href='#apigroups'>Groups</a>
+            </li>
+            <li>
+              <a href='#apinotes'>Notes</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href='#importexport'>Import/Export</a>
+        </li>
+        <li>
+          <a href='#encryption'>Encryption</a>
+          <ul class='no-bullets nested'>
+            <li>
+              <a href='#encryptionkey'>Key Generation</a>
+            </li>
+            <li>
+              <a href='#encryptionnotes'>Note Encryption</a>
+            </li>
+          </ul>
+        </li>
+        <li>
+          <a href='#sharing'>Sharing/Publishing</a>
+        </li>
+      </ul>
+      <div class='header'>
+        <h1 class='project-name'>Standard Notes</h1>
+        <div class='project-tagline'>Decentralized Personal Notes. Open, secure, yours.</div>
+        <div class='email-subscribe-wrapper'>
+          <div class='content'>
+            <div class='title'>Want to be involved in the future of notes?</div>
+            <div class='subtitle'>Subscribe to Standard Notes announcements.</div>
+            <link href='//cdn-images.mailchimp.com/embedcode/slim-10_7.css' rel='stylesheet' type='text/css'>
+            <style>
+              #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width: 100%;}
+            </style>
+            <div id='mc_embed_signup'>
+              <form action='//standardnotes.us14.list-manage.com/subscribe/post?u=f703bdd7fd7cd0923a94b3bd3&amp;id=8523dd24a8' class='validate' id='mc-embedded-subscribe-form' method='post' name='mc-embedded-subscribe-form' novalidate='' target='_blank'>
+                <div id='mc_embed_signup_scroll'>
+                  <input class='email' id='mce-EMAIL' name='EMAIL' placeholder='email address' required='' type='email' value=''>
+                  <!-- real people should not fill this in and expect good things - do not remove this or risk form bot signups -->
+                  <div aria-hidden='true' style='position: absolute; left: -5000px;'>
+                    <input name='b_f703bdd7fd7cd0923a94b3bd3_8523dd24a8' tabindex='-1' type='text' value=''>
+                  </div>
+                  <div class='clear'>
+                    <input class='button' id='mc-embedded-subscribe' name='subscribe' type='submit' value='Subscribe'>
+                  </div>
                 </div>
-                <div class='clear'>
-                  <input class='button' id='mc-embedded-subscribe' name='subscribe' type='submit' value='Subscribe'>
-                </div>
-              </div>
-            </form>
+              </form>
+            </div>
+            <div class='social'>
+              <a class='icon-twitter' href='https://twitter.com/standardnotes' target='_blank'></a>
+              <a class='icon-github' href='https://github.com/standardnotes' target='_blank'></a>
+              <a class='icon-reddit' href='https://www.reddit.com/r/StandardNotes/' target='_blank'></a>
+            </div>
           </div>
         </div>
       </div>
-    </section>
-    <section class='main-content'>
       <p class='condensed'>Protocol Specification</p>
       <p class='condensed small faded'>Version 0.10.0</p>
-      <h2><a aria-hidden='true' class='anchor' href='#preamble' id='preamble'>
-          <span aria-hidden='true' class='octicon octicon-link'></span>
-        </a>Preamble
+      <h2><a aria-hidden='true' class='anchor' href='#preamble' id='preamble'></a>Preamble
       </h2>
       <p>Notes are an essential part of human life, a tradition dating back tens of thousands of years. A person a thousand years ago may not have had much: a home, some food, family, and quite often, a journal. These thoughts, scribbled down on paper, belonged to no one but the authors themselves.</p>
       <p>Today, our notes are owned by Evernote Incorporated; by Google Incorporated; by Apple Inc. We do not own our own notes. They are owned by for-profit corporations, who are today at the mercy of paranoid governments looking to extend their reach as far as possible.</p>
       <p>These platforms also typically lock you in, so that it's either difficult or inconvenient to transfer to another service.</p>
       <p>Standard Notes is an open specification for a simple and secure system of organizing notes and groups of notes, and also publishing groups and notes onto the internet. Because it is an open protocol, a user need not be locked in to any application. Indeed, a user may even use multiple applications on different platforms to manage the same dataset.</p>
-      <h2><a aria-hidden='true' class='anchor' href='#introduction' id='introduction'>
-          <span aria-hidden='true' class='octicon octicon-link'></span>
-        </a>Introduction
+      <h2><a aria-hidden='true' class='anchor' href='#implementations' id='implementations'></a>Implementations
+      </h2>
+      <a class='block-link' href='https://github.com/standardnotes/ruby-server' target='_blank'>Ruby Server Implementation</a>
+      <a class='block-link' href='https://github.com/neeto-project/neeto-web-client' target='_blank'>Javascript Client Implementation</a>
+      <a class='block-link' href='https://neeto.io' target='_blank'>Web Client</a>
+      <h2><a aria-hidden='true' class='anchor' href='#introduction' id='introduction'></a>Introduction
       </h2>
       <p>This document outlines the specifications for the client-server communications of the Standard Notes system. Any client can communicate with a Standard Notes server as long as it understands the server's requirements.</p>
-      <h1>
-        Models
+      <h1><a aria-hidden='true' class='anchor' href='#models' id='models'></a>Models
       </h1>
       <p>The protocol consists of four main models:</p>
       <ul>
@@ -68,8 +133,7 @@
         <li>Groups</li>
         <li>Presentations</li>
       </ul>
-      <h2>
-        User
+      <h2><a aria-hidden='true' class='anchor' href='#user' id='user'></a>User
       </h2>
       <p>A user model has the following properties:</p>
       <table>
@@ -103,8 +167,7 @@
           </tr>
         </tbody>
       </table>
-      <h2>
-        Notes
+      <h2><a aria-hidden='true' class='anchor' href='#notes' id='notes'></a>Notes
       </h2>
       <p>Note models have the following properties:</p>
       <table>
@@ -158,8 +221,7 @@
           </tr>
         </tbody>
       </table>
-      <h2>
-        Groups
+      <h2><a aria-hidden='true' class='anchor' href='#groups' id='groups'></a>Groups
       </h2>
       <p>Group models have the following properties:</p>
       <table>
@@ -198,8 +260,7 @@
           </tr>
         </tbody>
       </table>
-      <h2>
-        Presentations
+      <h2><a aria-hidden='true' class='anchor' href='#presentations' id='presentations'></a>Presentations
       </h2>
       <p>Presentations are how groups and notes are presented to the public. Groups and notes are by default unpresented and hidden from public view. However, a user may choose to make a group or a note publicly viewable.</p>
       <p>
@@ -267,8 +328,7 @@
           </tr>
         </tbody>
       </table>
-      <h1>
-        REST API
+      <h1><a aria-hidden='true' class='anchor' href='#api' id='api'></a>REST API
       </h1>
       <p>General:</p>
       <ol>
@@ -285,7 +345,8 @@
           <em>nested</em>.
         </li>
       </ol>
-      <h2>Auth</h2>
+      <h2><a aria-hidden='true' class='anchor' href='#apiauth' id='apiauth'></a>Auth
+      </h2>
       <p>Standard Notes uses JSON Web Tokens (JWT) for authentication.</p>
       <div class='endpoints'>
         <div class='endpoint' ng-repeat='request in apiData.auth'>
@@ -306,9 +367,7 @@
           </div>
         </div>
       </div>
-      <endpoints></endpoints>
-      <h2>
-        Users
+      <h2><a aria-hidden='true' class='anchor' href='#apiusers' id='apiusers'></a>Users
       </h2>
       <div class='endpoints'>
         <div class='endpoint' ng-repeat='request in apiData.users'>
@@ -329,8 +388,7 @@
           </div>
         </div>
       </div>
-      <h2>
-        Groups
+      <h2><a aria-hidden='true' class='anchor' href='#apigroups' id='apigroups'></a>Groups
       </h2>
       <div class='endpoints'>
         <div class='endpoint' ng-repeat='request in apiData.groups'>
@@ -351,8 +409,7 @@
           </div>
         </div>
       </div>
-      <h2>
-        Notes
+      <h2><a aria-hidden='true' class='anchor' href='#apinotes' id='apinotes'></a>Notes
       </h2>
       <div class='endpoints'>
         <div class='endpoint' ng-repeat='request in apiData.notes'>
@@ -373,9 +430,7 @@
           </div>
         </div>
       </div>
-      <h2><a aria-hidden='true' class='anchor' href='#importexport' id='importexport'>
-          <span aria-hidden='true' class='octicon octicon-link'></span>
-        </a>Import/Export
+      <h2><a aria-hidden='true' class='anchor' href='#importexport' id='importexport'></a>Import/Export
       </h2>
       <p>The export file is a JSON file that follows a standard format, and is unencrypted.</p>
       <p>
@@ -410,6 +465,7 @@
         </div>
       </div>
       <h1>
+        <a aria-hidden='true' class='anchor' href='#encryption' id='encryption'></a>
         Encryption
       </h1>
       <p>Encryption and security should always be top of mind with Standard Notes.</p>
@@ -424,9 +480,9 @@
         <li>Client-server connections must be made securely through SSL/TLS.</li>
         <li>Upon receiving data from client, servers should encrypt sensitive data once more before storing with a key only the server knows. The server should decrypt this data before sending back to client.</li>
       </ol>
-      <h4><a aria-hidden='true' class='anchor' href='#user-password-encryption-and-key-generation' id='user-password-encryption-and-key-generation'>
-          <span aria-hidden='true' class='octicon octicon-link'></span>
-        </a>User Password Encryption and Key Generation
+      <h4>
+        <a aria-hidden='true' class='anchor' href='#encryptionkey' id='encryptionkey'></a>
+        User Password Encryption and Key Generation
       </h4>
       <p>
         <strong>Client-side:</strong>
@@ -450,6 +506,7 @@
         </li>
       </ol>
       <h2>
+        <a aria-hidden='true' class='anchor' href='#encryptionnotes' id='encryptionnotes'></a>
         Note Encryption
       </h2>
       <p>
@@ -520,7 +577,8 @@
         </li>
       </ol>
       <h1>
-        Sharing/publishing
+        <a aria-hidden='true' class='anchor' href='#sharing' id='sharing'></a>
+        Sharing/Publishing
       </h1>
       <p>When a note is shared, it is accessible by the public. To share a note, you create a presentation object on the note.</p>
       <p>When presenting,</p>
@@ -539,7 +597,7 @@
       </ol>
       <footer class='site-footer'>
         <span class='site-footer-owner'>
-          <a href='https://github.com/standardnotes/standard-notes-protocol'>Standard Notes Protocol</a>
+          <a href='https://github.com/standardnotes'>Standard Notes</a>
           is maintained by
           <a href='https://github.com/standardnotes'>standardnotes</a>.
         </span>

@@ -4,8 +4,10 @@
     .module('app', [])
     .controller('AppCtrl', AppCtrl);
 
-  function AppCtrl($scope) {
+  function AppCtrl($scope, $timeout) {
     $scope.apiData = apiData;
-    console.log(apiData);
+    $timeout(function(){
+      gumshoe.init();
+    }, 100)
   }
 })();
