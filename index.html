@@ -497,17 +497,22 @@
           <code>uip</code>
           before sending to server as
           <code>password</code>:
-          <ul>
-            a. Stretch
-            <code>uip</code>
-            using PBKDF2 with 3000 iterations, SHA512 as hashing algorithm, and user's email as salt.
-            <br>
-            b. Split result from (a) in two halves:
-            - First half will be the
-            <code>password</code>
-            sent to the server.
-            - Second half will be the user's global encryption key (<code>gk</code>) (stored locally and never sent to server.)
-          </ul>
+          <ol type='a'>
+            <li>
+              Stretch
+              <code>uip</code>
+              using PBKDF2 with 3000 iterations, SHA512 as hashing algorithm, and user's email as salt.
+            </li>
+            <li>
+              Split result from (a) in two halves:
+              <br>
+              - First half will be the
+              <code>password</code>
+              sent to the server.
+              <br>
+              - Second half will be the user's global encryption key (<code>gk</code>) (stored locally and never sent to server.)
+            </li>
+          </ol>
         </li>
       </ol>
       <h2>

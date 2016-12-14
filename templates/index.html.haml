@@ -466,18 +466,21 @@
           before sending to server as
           = succeed ":" do
             %code password
-          %ul
-            a. Stretch
-            %code uip
-            using PBKDF2 with 3000 iterations, SHA512 as hashing algorithm, and user's email as salt.
-            %br
-            b. Split result from (a) in two halves:
-            \- First half will be the
-            %code password
-            sent to the server.
-            \- Second half will be the user's global encryption key (
-            %code> gk
-            ) (stored locally and never sent to server.)
+          %ol{"type" => "a"}
+            %li
+              Stretch
+              %code uip
+              using PBKDF2 with 3000 iterations, SHA512 as hashing algorithm, and user's email as salt.
+            %li
+              Split result from (a) in two halves:
+              %br
+              \- First half will be the
+              %code password
+              sent to the server.
+              %br
+              \- Second half will be the user's global encryption key (
+              %code> gk
+              ) (stored locally and never sent to server.)
       %h2
         %a#encryptionnotes.anchor{"aria-hidden" => "true", :href => "#encryptionnotes"}
         Note Encryption
