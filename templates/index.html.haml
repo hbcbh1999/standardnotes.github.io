@@ -102,14 +102,14 @@
       %strong Server Models
       %ul
         %li User
-        %li Items
+        %li Item
       %strong Client Structures
       %ul
         %li Note
         %li Tag
       %p An <code>Item</code> model has a <code>content</code> field. The <code>content</code> field stores a JSON encoded structure that can be, in this case, a Note or a Tag.
       %p In this client-server model, servers are to be treated as dumb and uninformed. Because data is encrypted anyway, maintaining relationships between server side models is not very useful.
-      %p The SN model pushes relationship mapping to the client, which clients today will have no problem handling. This allows for improvements to be made to the data model on the client level, and not on the difficult-to-change server level.
+      %p The SN model pushes relationship mapping to the client, which clients today have no problem handling. This allows for improvements to be made to the data model on the client level, and not on the difficult-to-change server level.
       %p (You'll also notice that clients are not restricted to building just a notes app with this data model. You can build almost anything that can represent data as a JSON encoded object. Notes are a good place to start however.)
 
       %h2 Server Models
@@ -205,7 +205,7 @@
             %td references
             %td Array
             %td
-              A metadata array of other `Item` uuids this model is related to and their respective <code>content_type</code>:
+              A metadata array of other <code>Item</code> uuids this model is related to and their respective <code>content_type</code>:
               %br
               %br
               %pre
@@ -281,6 +281,7 @@
           .path {{request.verb}} {{request.path}}
           .desc {{request.desc}}
           .params
+            Params:
             %span{"ng-repeat" => "param in request.params"}
               {{param.name}}
               %span{"ng-if" => "param.desc"} — {{param.desc}}
@@ -299,6 +300,7 @@
           .path {{request.verb}} {{request.path}}
           .desc {{request.desc}}
           .params
+            Params:
             %span{"ng-repeat" => "param in request.params"}
               {{param.name}}
               %span{"ng-if" => "param.desc"} — {{param.desc}}
@@ -317,6 +319,7 @@
           .path {{request.verb}} {{request.path}}
           .desc {{request.desc}}
           .params
+            Params:
             %span{"ng-repeat" => "param in request.params"}
               {{param.name}} 
               %span{"ng-if" => "param.desc"} — {{param.desc}}

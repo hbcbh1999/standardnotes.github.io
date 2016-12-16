@@ -157,7 +157,7 @@ var apiData = {
       desc : "Creates or updates an item. This endpoint must be able to handle both a single item or an array of items. If the item doesn't exist, it should be created.",
       params : [
         {
-          name : "item || items",
+          name : "item or items",
           desc : "A single item or an array of items"
         }
       ],
