@@ -30,13 +30,7 @@
               <a href='#user'>User</a>
             </li>
             <li>
-              <a href='#notes'>Notes</a>
-            </li>
-            <li>
-              <a href='#groups'>Groups</a>
-            </li>
-            <li>
-              <a href='#presentations'>Presentations</a>
+              <a href='#items'>Items</a>
             </li>
           </ul>
         </li>
@@ -50,10 +44,7 @@
               <a href='#apiusers'>Users</a>
             </li>
             <li>
-              <a href='#apigroups'>Groups</a>
-            </li>
-            <li>
-              <a href='#apinotes'>Notes</a>
+              <a href='#apiitems'>Items</a>
             </li>
           </ul>
         </li>
@@ -67,7 +58,7 @@
               <a href='#encryptionkey'>Key Generation</a>
             </li>
             <li>
-              <a href='#encryptionnotes'>Note Encryption</a>
+              <a href='#encryptionitem'>Item Encryption</a>
             </li>
           </ul>
         </li>
@@ -126,15 +117,41 @@
       <p>This document outlines the specifications for the client-server communications of the Standard Notes system. Any client can communicate with a Standard Notes server as long as it understands the server's requirements.</p>
       <h1><a aria-hidden='true' class='anchor' href='#models' id='models'></a>Models
       </h1>
-      <p>The protocol consists of four main models:</p>
+      <p>The protocol consists of models on the server side and what are known as structures on the client side.</p>
+      <strong>Server Models</strong>
       <ul>
         <li>User</li>
-        <li>Notes</li>
-        <li>Groups</li>
-        <li>Presentations</li>
+        <li>Items</li>
       </ul>
-      <h2><a aria-hidden='true' class='anchor' href='#user' id='user'></a>User
-      </h2>
+      <strong>Client Structures</strong>
+      <ul>
+        <li>Note</li>
+        <li>Tag</li>
+      </ul>
+      <p>An <code>Item</code> model has a <code>content</code> field. The <code>content</code> field stores a JSON encoded structure that can be, in this case, a Note or a Tag.</p>
+      <p>In this client-server model, servers are to be treated as dumb and uninformed. Because data is encrypted anyway, maintaining relationships between server side models is not very useful.</p>
+      <p>The SN model pushes relationship mapping to the client, which clients today will have no problem handling. This allows for improvements to be made to the data model on the client level, and not on the difficult-to-change server level.</p>
+      <p>(You'll also notice that clients are not restricted to building just a notes app with this data model. You can build almost anything that can represent data as a JSON encoded object. Notes are a good place to start however.)</p>
+      <h2>Server Models</h2>
+      <p>All server models must have the following properties:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>name</th>
+            <th>type</th>
+            <th>description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>uuid</td>
+            <td>String (or uuid for some databases)</td>
+            <td>The unique identifier for this model.</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3><a aria-hidden='true' class='anchor' href='#user' id='user'></a>User
+      </h3>
       <p>A user model has the following properties:</p>
       <table>
         <thead>
@@ -155,7 +172,7 @@
             <td>String</td>
             <td>
               The password for this user.
-              <em>Clients must enforce a 24 character minimum for passwords.</em>
+              <em>Note that passwords must be manipulated before being sent to the server. See here.</em>
             </td>
           </tr>
           <tr>
@@ -163,13 +180,13 @@
               username (<em>optional</em>)
             </td>
             <td>String</td>
-            <td>A unique username used for presentations. For servers that manage multiple Users, the username serves as a way to namespace presentations.</td>
+            <td>A unique username used for sharing items. For servers that manage multiple Users, the username serves as a way to namespace presentations.</td>
           </tr>
         </tbody>
       </table>
-      <h2><a aria-hidden='true' class='anchor' href='#notes' id='notes'></a>Notes
-      </h2>
-      <p>Note models have the following properties:</p>
+      <h3><a aria-hidden='true' class='anchor' href='#items' id='items'></a>Items
+      </h3>
+      <p>Item models have the following properties:</p>
       <table>
         <thead>
           <tr>
@@ -180,50 +197,39 @@
         </thead>
         <tbody>
           <tr>
-            <td>id</td>
-            <td>Integer</td>
-            <td>The id for this note. These ids are relative to the server hosting the data, and may change if a user initiated export and import occurs.</td>
-          </tr>
-          <tr>
-            <td>uuid</td>
-            <td>String</td>
-            <td>The unique global identifier for this note. This uuid does not change during new data imports.</td>
-          </tr>
-          <tr>
             <td>content</td>
             <td>Text</td>
-            <td>
-              The JSON string encoded content of the note, with the following format:
-              <pre><code>{title: _note_title_, text: _note_text_}</code></pre>
-            </td>
+            <td>The JSON string encoded structure of the note, encrypted (with some exceptions. See Sharing for details.).</td>
+          </tr>
+          <tr>
+            <td>content_type</td>
+            <td>String</td>
+            <td>The type of the structure contained in the <code>content</code> field.</td>
           </tr>
           <tr>
             <td>loc_eek</td>
             <td>String</td>
-            <td>The locally encrypted encryption key for this note.</td>
+            <td>The locally encrypted encryption key for this item.</td>
           </tr>
           <tr>
-            <td>
-              group_id (<em>optional</em>)
-            </td>
-            <td>Integer</td>
-            <td>The identifier of the group this note belongs to.</td>
+            <td>presentation_name</td>
+            <td>String</td>
+            <td>The name of this presentation, if applicable. (See Sharing for details).</td>
           </tr>
           <tr>
             <td>created_at</td>
             <td>Date</td>
-            <td>The date this note was created.</td>
+            <td>The date this item was created.</td>
           </tr>
           <tr>
-            <td>modified_at</td>
+            <td>updated_at</td>
             <td>Date</td>
-            <td>The date this note was modified.</td>
+            <td>The date this item was modified.</td>
           </tr>
         </tbody>
       </table>
-      <h2><a aria-hidden='true' class='anchor' href='#groups' id='groups'></a>Groups
-      </h2>
-      <p>Group models have the following properties:</p>
+      <h2>Client Structures</h2>
+      <p>Client structures are stored in the <code>content</code> field of the <code>Item</code> model. All client structures have the following properties:</p>
       <table>
         <thead>
           <tr>
@@ -234,41 +240,20 @@
         </thead>
         <tbody>
           <tr>
-            <td>id</td>
-            <td>Integer</td>
-            <td>The id for this group.</td>
-          </tr>
-          <tr>
-            <td>uuid</td>
-            <td>String</td>
-            <td>The unique global identifier for this group. This uuid does not change during new data imports.</td>
-          </tr>
-          <tr>
-            <td>name</td>
-            <td>String</td>
-            <td>The name of the group.</td>
-          </tr>
-          <tr>
-            <td>created_at</td>
-            <td>Date</td>
-            <td>The date this group was created.</td>
-          </tr>
-          <tr>
-            <td>modified_at</td>
-            <td>Date</td>
-            <td>The date this group was modified.</td>
+            <td>references</td>
+            <td>Array</td>
+            <td>
+              A metadata array of other `Item` uuids this model is related to and their respective <code>content_type</code>:
+              <br>
+              <br>
+              <pre><code>[&#x000A;  {uuid: xxxx, content_type: "Tag"},&#x000A;  {uuid: xxxxx, content_type: "Tag"},&#x000A;]</code></pre>
+            </td>
           </tr>
         </tbody>
       </table>
-      <h2><a aria-hidden='true' class='anchor' href='#presentations' id='presentations'></a>Presentations
-      </h2>
-      <p>Presentations are how groups and notes are presented to the public. Groups and notes are by default unpresented and hidden from public view. However, a user may choose to make a group or a note publicly viewable.</p>
-      <p>
-        A group or a note with a presentation can be accessed by the presentation's
-        <code>url</code>,
-        which the server computes and returns with the presentation payload.
-      </p>
-      <p>Notes with a presentation are stored on the server without client-side encryption.</p>
+      <h3><a aria-hidden='true' class='anchor' href='#notes' id='notes'></a>Notes
+      </h3>
+      <p>Note structure have the following properties:</p>
       <table>
         <thead>
           <tr>
@@ -279,53 +264,33 @@
         </thead>
         <tbody>
           <tr>
-            <td>id</td>
-            <td>Integer</td>
-            <td>The id for this presentation.</td>
-          </tr>
-          <tr>
-            <td>uuid</td>
+            <td>title</td>
             <td>String</td>
-            <td>The unique global identifier for this presentation. This uuid does not change during new data imports.</td>
+            <td>The title of the note.</td>
           </tr>
           <tr>
-            <td>
-              root_path (<em>read-only</em>)
-            </td>
+            <td>text</td>
             <td>String</td>
-            <td>The root path of this presentation, as decided by the server.</td>
+            <td>The text body of the note.</td>
           </tr>
+        </tbody>
+      </table>
+      <h3><a aria-hidden='true' class='anchor' href='#tags' id='tags'></a>Tags
+      </h3>
+      <p>Tag structure have the following properties:</p>
+      <table>
+        <thead>
           <tr>
-            <td>relative_path</td>
+            <th>name</th>
+            <th>type</th>
+            <th>description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>title</td>
             <td>String</td>
-            <td>The relative location of this presentation, with respect to the root_path. This path can be chosen by the client user.</td>
-          </tr>
-          <tr>
-            <td>
-              url (<em>read-only</em>)
-            </td>
-            <td>String</td>
-            <td>The full URL of this presentation. The server decides what this URL is, and should be based off the root and relative path.</td>
-          </tr>
-          <tr>
-            <td>presentable_type</td>
-            <td>String</td>
-            <td>The class of the object being presented. This can be set to "Note" or "Group".</td>
-          </tr>
-          <tr>
-            <td>presentable_id</td>
-            <td>String</td>
-            <td>The identifier of the object being presented. This will be the identifier of the Note or Group being presented.</td>
-          </tr>
-          <tr>
-            <td>created_at</td>
-            <td>Date</td>
-            <td>The date this presentation was created.</td>
-          </tr>
-          <tr>
-            <td>modified_at</td>
-            <td>Date</td>
-            <td>The date this presentation was modified.</td>
+            <td>The title of the tag.</td>
           </tr>
         </tbody>
       </table>
@@ -389,31 +354,10 @@
           </div>
         </div>
       </div>
-      <h2><a aria-hidden='true' class='anchor' href='#apigroups' id='apigroups'></a>Groups
+      <h2><a aria-hidden='true' class='anchor' href='#apiitems' id='apiitems'></a>Items
       </h2>
       <div class='endpoints'>
-        <div class='endpoint' ng-repeat='request in apiData.groups'>
-          <div class='path'>{{request.verb}} {{request.path}}</div>
-          <div class='desc'>{{request.desc}}</div>
-          <div class='params'>
-            <span ng-repeat='param in request.params'>
-              {{param.name}}
-              <span ng-if='param.desc'>— {{param.desc}}</span>
-            </span>
-          </div>
-          <div class='responses'>
-            <div class='strong small'>Responses</div>
-            <div class='response' ng-repeat='response in request.responses'>
-              {{response.status}}
-              <pre><code>{{response.body}}</code></pre>
-            </div>
-          </div>
-        </div>
-      </div>
-      <h2><a aria-hidden='true' class='anchor' href='#apinotes' id='apinotes'></a>Notes
-      </h2>
-      <div class='endpoints'>
-        <div class='endpoint' ng-repeat='request in apiData.notes'>
+        <div class='endpoint' ng-repeat='request in apiData.items'>
           <div class='path'>{{request.verb}} {{request.path}}</div>
           <div class='desc'>{{request.desc}}</div>
           <div class='params'>
@@ -433,18 +377,18 @@
       </div>
       <h2><a aria-hidden='true' class='anchor' href='#importexport' id='importexport'></a>Import/Export
       </h2>
-      <p>The export file is a JSON file that follows a standard format, and is unencrypted.</p>
+      <p>The export file is a JSON file of all the user's items, unencrypted.</p>
       <p>
-        <strong>Export file format:</strong>
+        <strong>Format:</strong>
       </p>
-      <pre><code>{&#x000A;    "groups": [&#x000A;        {&#x000A;            "id": "",&#x000A;            "uuid": "",&#x000A;            "name": "",&#x000A;            "created_at": "",&#x000A;            "modified_at": ""&#x000A;        }&#x000A;    ],&#x000A;    "notes": [&#x000A;        {&#x000A;            "id": "",&#x000A;            "uuid" : "",&#x000A;            "content": "",&#x000A;            "group_id": "",&#x000A;            "created_at": "",&#x000A;            "modified_at": ""&#x000A;        }&#x000A;    ],&#x000A;    "presentations": [&#x000A;        {&#x000A;            "id": "",&#x000A;            "uuid": "",&#x000A;            "root_path": "",&#x000A;            "relative_path":    "",&#x000A;            "presentable_id" : "",&#x000A;            "presentable_type" : "",&#x000A;            "created_at": "",&#x000A;            "modified_at": ""&#x000A;        }&#x000A;    ]&#x000A;}</code></pre>
+      <pre><code>{&#x000A;  "items": [&#x000A;    {&#x000A;      "uuid": "3162fe3a-1b5b-4cf5-b88a-afcb9996b23a",&#x000A;      "content_type": "Note",&#x000A;      "presentation_name": null,&#x000A;      "content": {&#x000A;        "references": [&#x000A;          {&#x000A;            "uuid": "901751a0-0b85-4636-93a3-682c4779b634",&#x000A;            "content_type": "Tag"&#x000A;          },&#x000A;          {&#x000A;            "uuid": "023112fe-9066-481e-8a63-f15f27d3f904",&#x000A;            "content_type": "Tag"&#x000A;          }&#x000A;        ],&#x000A;        "title": "...",&#x000A;        "text": "..."&#x000A;      },&#x000A;      "created_at": "2016-12-16T17:37:50.000Z"&#x000A;    },&#x000A;&#x000A;    {&#x000A;      "uuid": "023112fe-9066-481e-8a63-f15f27d3f904",&#x000A;      "content_type": "Tag",&#x000A;      "presentation_name": "essays",&#x000A;      "content": {&#x000A;        "references": [&#x000A;          {&#x000A;            "uuid": "94cba6b7-6b55-41d6-89a5-e3db8be9fbbf",&#x000A;            "content_type": "Note"&#x000A;          },&#x000A;          {&#x000A;            "uuid": "ada3ff00-85fa-4427-a883-652a84736715",&#x000A;            "content_type": "Note"&#x000A;          },&#x000A;          {&#x000A;            "uuid": "3162fe3a-1b5b-4cf5-b88a-afcb9996b23a",&#x000A;            "content_type": "Note"&#x000A;          }&#x000A;        ],&#x000A;        "title": "essays"&#x000A;      },&#x000A;      "created_at": "2016-12-16T17:13:20.000Z"&#x000A;    }&#x000A;  ]&#x000A;}</code></pre>
       <p>High-level flow, user wants to switch clients and servers:</p>
       <ol>
         <li>User chooses "Export" option on client A, which is paired with server A.</li>
-        <li>Client produces JSON file with all notes unencrypted.</li>
-        <li>User uploads JSON file to client B.</li>
-        <li>Client B iterates over notes and encrypts the content of each of them locally.</li>
-        <li>Client B sends updated JSON (with encrypted note content) data to server B.</li>
+        <li>Client produces JSON file with all items unencrypted.</li>
+        <li>User uploads JSON file with client B paired with Server B.</li>
+        <li>Client B iterates over items and encrypts the content of each of them locally. (Sharing exceptions apply, see Sharing.)</li>
+        <li>Client B sends updated JSON (with encrypted item content) data to server B.</li>
       </ol>
       <div class='endpoints'>
         <div class='endpoint' ng-repeat='request in apiData.import'>
@@ -470,21 +414,21 @@
         Encryption
       </h1>
       <p>Encryption and security should always be top of mind with Standard Notes.</p>
-      <p>It is important that there exist a seperation of concerns between the server and the client. That is, the client should not trust the server, and vice versa. Encryption keys are generated by stretching the user's input password using PBKDF2. The resulting 512 bit key is then split in two - the first half is sent to the server as the user's password, and the second half is saved locally as the user's master encryption key. This way, the server can never calculate the encryption key.</p>
+      <p>It is important that there exist a separation of concerns between the server and the client. That is, the client should not trust the server, and vice versa. Encryption keys are generated by stretching the user's input password using PBKDF2. The resulting 512 bit key is then split in two - the first half is sent to the server as the user's password, and the second half is saved locally as the user's master encryption key. This way, the server can never calculate the encryption key.</p>
       <p>The following are general requirements for clients and servers:</p>
       <ol>
         <li>
-          Note
+          Item
           <code>content</code>
           must be encrypted locally before being sent to server.
         </li>
         <li>Client-server connections must be made securely through SSL/TLS.</li>
         <li>Upon receiving data from client, servers should encrypt sensitive data once more before storing with a key only the server knows. The server should decrypt this data before sending back to client.</li>
       </ol>
-      <h4>
+      <h2>
         <a aria-hidden='true' class='anchor' href='#encryptionkey' id='encryptionkey'></a>
         User Password Encryption and Key Generation
-      </h4>
+      </h2>
       <p>
         <strong>Client-side:</strong>
       </p>
@@ -516,16 +460,16 @@
         </li>
       </ol>
       <h2>
-        <a aria-hidden='true' class='anchor' href='#encryptionnotes' id='encryptionnotes'></a>
-        Note Encryption
+        <a aria-hidden='true' class='anchor' href='#encryptionitem' id='encryptionitem'></a>
+        Item Encryption
       </h2>
       <p>
         <strong>Client-side:</strong>
       </p>
-      <p>A note is encrypted using a random key locally generated for each note.</p>
-      <p>For every note,</p>
+      <p>An item is encrypted using a random key locally generated for each item.</p>
+      <p>For every item,</p>
       <p>
-        <strong>If note does not have an associated presentation:</strong>
+        <strong>If item is not public:</strong>
       </p>
       <ol>
         <li>
@@ -555,59 +499,45 @@
           <code>loc_eek</code>
           to the server. (Do not send
           <code>ek</code>,
-          which can be used to decrypt the note.)
+          which can be used to decrypt the item.)
         </li>
       </ol>
       <p>
-        <strong>If note has presentation:</strong>
+        <strong>If item is public or belongs to public item:</strong>
       </p>
       <ol>
         <li>
-          Send
+          Set <code>lok_eek</code> to null and send
           <code>content</code>
           in plain text to server.
         </li>
       </ol>
       <p>
-        By generating a unique key for every note, this allows for easier changing of a user's password — only the note's
+        Generating a unique key for every item allows for easier changing of a user's password — only the item's
         <code>ek</code>
         will have to be re-encrypted with the new
         <code>gk</code>,
-        and not the entire contents of the note.
+        and not the entire contents of the item.
       </p>
       <p>
         <strong>Server-side:</strong>
       </p>
-      <p>For every received note:</p>
+      <p>For every received item:</p>
       <ol>
         <li>
           Encrypt
           <code>content</code>
-          using server known key and store as
-          <code>enc_content</code>.
-          Decrypt before sending back to client as
-          <code>content</code>.
+          using server known key and store.
+          Decrypt before sending back to client.
         </li>
       </ol>
       <h1>
         <a aria-hidden='true' class='anchor' href='#sharing' id='sharing'></a>
         Sharing/Publishing
       </h1>
-      <p>When a note is shared, it is accessible by the public. To share a note, you create a presentation object on the note.</p>
-      <p>When presenting,</p>
-      <ol>
-        <li>For sharing a single note, the client must remove local encryption from the note.</li>
-        <li>For sharing an entire group, the client must remove local encryption for all notes belonging to the group.</li>
-      </ol>
-      <p>When un-presenting,</p>
-      <ol>
-        <li>
-          For un-presenting a single note, the client must encrypt the note
-          <strong>if</strong>
-          the note doesn't belong to a presented group.
-        </li>
-        <li>For un-presenting a group, the client must encrypt all notes belonging to this group, except for notes that are individually presented.</li>
-      </ol>
+      <p>When an item is shared, it is accessible by the public. To share an item, you set a value for <code>presentation_name</code> on the item.</p>
+      <p>When presenting, the client must remove local encryption from the item and all other referenced items the client deems related.</p>
+      <p>When un-presenting an item, the client must encrypt the item and all other referenced items the client deems related.</p>
       <footer class='site-footer'>
         <span class='site-footer-owner'>
           <a href='https://github.com/standardnotes'>Standard Notes</a>

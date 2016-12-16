@@ -96,12 +96,12 @@ var apiData = {
     {
       verb : "GET",
       path : "users/me",
-      desc : "Returns the current user as well as all the user's notes (with nested presentations) and groups (with nested presentations).",
+      desc : "Returns the current user as well as all the user's items.",
       params : [],
       responses : [
         {
           status : "200",
-          body : "{\"email\" : \"...\", \"notes\" : [], \"groups\" : []}"
+          body : "{\"email\" : \"...\", \"items\" : []}"
         },
         {
           status : "5xx",
@@ -113,159 +113,21 @@ var apiData = {
 
 
 
-  groups : [
+  items : [
     {
       verb : "GET",
-      path : "groups",
-      desc : "Gets all groups for current user.",
-      params : [],
-      responses : [
-        {
-          status : "200",
-          body : "{\"groups\" : []}"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    },
-    {
-      verb : "GET",
-      path : "groups/:id",
-      desc : "Gets a particular group.",
-      params : [],
-      responses : [
-        {
-          status : "200",
-          body : "{\"group\" : {}}"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    },
-    {
-      verb : "POST",
-      path : "groups",
-      desc : "Creates a new group.",
-      params : [],
-      responses : [
-        {
-          status : "200",
-          body : "{\"group\" : {}}"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    },
-    {
-      verb : "PATCH",
-      path : "groups/:id",
-      desc : "Updates a group.",
-      params : [],
-      responses : [
-        {
-          status : "204",
-          body : "No Content"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    },
-    {
-      verb : "DELETE",
-      path : "groups/:id",
-      desc : "Deletes a group.",
-      params : [],
-      responses : [
-        {
-          status : "204",
-          body : "No Content"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    },
-    {
-      verb : "POST",
-      path : "groups/:id/presentation",
-      desc : "Associates a presentation object with this group.",
-      params : [],
-      responses : [
-        {
-          status : "200",
-          body : "{\"presentation\" : {}}"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    },
-    {
-      verb : "PATCH",
-      path : "groups/:id/presentation",
-      desc : "Updates the group's presentation.",
+      path : "items",
+      desc : "Gets all items for current user.",
       params : [
         {
-          name : "relative_path",
-          desc : ""
-        }
-      ],
-      responses : [
-        {
-          status : "204",
-          body : "No Content"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    },
-    {
-      verb : "DELETE",
-      path : "groups/:id/presentation",
-      desc : "Deletes the group's presentation.",
-      params : [],
-      responses : [
-        {
-          status : "204",
-          body : "No Content"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    }
-  ],
-
-
-
-  notes : [
-    {
-      verb : "GET",
-      path : "notes",
-      desc : "Gets all notes for current user.",
-      params : [
-        {
-          name: "modified_after",
-          desc: "Optional. Return only notes modified after a certain date."
+          name: "updated_after",
+          desc: "Optional. Return only items modified after a certain date."
         }
       ],
       responses : [
         {
           status : "200",
-          body : "{\"notes\" : []}"
+          body : "{\"items\" : []}"
         },
         {
           status : "5xx",
@@ -275,13 +137,13 @@ var apiData = {
     },
     {
       verb : "GET",
-      path : "notes/:id",
-      desc : "Gets a particular note.",
+      path : "items/:id",
+      desc : "Gets a particular item.",
       params : [],
       responses : [
         {
           status : "200",
-          body : "{\"note\" : {}}"
+          body : "{\"item\" : {}}"
         },
         {
           status : "5xx",
@@ -291,29 +153,18 @@ var apiData = {
     },
     {
       verb : "POST",
-      path : "notes",
-      desc : "Creates a new note.",
-      params : [],
+      path : "items",
+      desc : "Creates or updates an item. This endpoint must be able to handle both a single item or an array of items. If the item doesn't exist, it should be created.",
+      params : [
+        {
+          name : "item || items",
+          desc : "A single item or an array of items"
+        }
+      ],
       responses : [
         {
           status : "200",
-          body : "{\"note\" : {}}"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    },
-    {
-      verb : "PATCH",
-      path : "notes/:id",
-      desc : "Updates a note.",
-      params : [],
-      responses : [
-        {
-          status : "204",
-          body : "No Content"
+          body : "{\"items\" : {}}"
         },
         {
           status : "5xx",
@@ -323,87 +174,9 @@ var apiData = {
     },
     {
       verb : "DELETE",
-      path : "notes/:id",
-      desc : "Deletes a note.",
+      path : "items/:id",
+      desc : "Deletes an item.",
       params : [],
-      responses : [
-        {
-          status : "204",
-          body : "No Content"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    },
-    {
-      verb : "POST",
-      path : "notes/:id/presentation",
-      desc : "Associates a presentation object with this note.",
-      params : [],
-      responses : [
-        {
-          status : "200",
-          body : "{\"presentation\" : {}}"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    },
-    {
-      verb : "PATCH",
-      path : "notes/:id/presentation",
-      desc : "Updates the note's presentation.",
-      params : [
-        {
-          name : "relative_path",
-          desc : ""
-        }
-      ],
-      responses : [
-        {
-          status : "204",
-          body : "No Content"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    },
-    {
-      verb : "DELETE",
-      path : "notes/:id/presentation",
-      desc : "Deletes the note's presentation.",
-      params : [],
-      responses : [
-        {
-          status : "204",
-          body : "No Content"
-        },
-        {
-          status : "5xx",
-          body : "{\"errors\" : []}"
-        }
-      ]
-    }
-  ],
-
-
-  import : [
-    {
-      verb : "POST",
-      path : "import",
-      desc : "Imports JSON data. The server must preserve the relationships between groups, notes, and presentations. See {link} for a reference implementation.",
-      params : [
-        {
-          name : "data",
-          desc : "the JSON data as specified above"
-        }
-      ],
       responses : [
         {
           status : "204",

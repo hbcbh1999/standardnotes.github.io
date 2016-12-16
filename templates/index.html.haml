@@ -27,11 +27,7 @@
             %li
               %a{"href" => "#user"} User
             %li
-              %a{"href" => "#notes"} Notes
-            %li
-              %a{"href" => "#groups"} Groups
-            %li
-              %a{"href" => "#presentations"} Presentations
+              %a{"href" => "#items"} Items
         %li
           %a{"href" => "#api"} REST API
           %ul.no-bullets.nested
@@ -40,9 +36,7 @@
             %li
               %a{"href" => "#apiusers"} Users
             %li
-              %a{"href" => "#apigroups"} Groups
-            %li
-              %a{"href" => "#apinotes"} Notes
+              %a{"href" => "#apiitems"} Items
         %li
           %a{"href" => "#importexport"} Import/Export
         %li
@@ -51,7 +45,7 @@
             %li
               %a{"href" => "#encryptionkey"} Key Generation
             %li
-              %a{"href" => "#encryptionnotes"} Note Encryption
+              %a{"href" => "#encryptionitem"} Item Encryption
         %li
           %a{"href" => "#sharing"} Sharing/Publishing
 
@@ -104,13 +98,36 @@
       %h1
         %a#models.anchor{"aria-hidden" => "true", :href => "#models"}>
         Models
-      %p The protocol consists of four main models:
+      %p The protocol consists of models on the server side and what are known as structures on the client side.
+      %strong Server Models
       %ul
         %li User
-        %li Notes
-        %li Groups
-        %li Presentations
-      %h2
+        %li Items
+      %strong Client Structures
+      %ul
+        %li Note
+        %li Tag
+      %p An <code>Item</code> model has a <code>content</code> field. The <code>content</code> field stores a JSON encoded structure that can be, in this case, a Note or a Tag.
+      %p In this client-server model, servers are to be treated as dumb and uninformed. Because data is encrypted anyway, maintaining relationships between server side models is not very useful.
+      %p The SN model pushes relationship mapping to the client, which clients today will have no problem handling. This allows for improvements to be made to the data model on the client level, and not on the difficult-to-change server level.
+      %p (You'll also notice that clients are not restricted to building just a notes app with this data model. You can build almost anything that can represent data as a JSON encoded object. Notes are a good place to start however.)
+
+      %h2 Server Models
+      %p All server models must have the following properties:
+      %table
+        %thead
+          %tr
+            %th name
+            %th type
+            %th description
+        %tbody
+          %tr
+            %td uuid
+            %td String (or uuid for some databases)
+            %td The unique identifier for this model.
+
+
+      %h3
         %a#user.anchor{"aria-hidden" => "true", :href => "#user"}>
         User
       %p A user model has the following properties:
@@ -130,19 +147,19 @@
             %td String
             %td
               The password for this user.
-              %em Clients must enforce a 24 character minimum for passwords.
+              %em Note that passwords must be manipulated before being sent to the server. See here.
           %tr
             %td
               username (
               %em> optional
               )
             %td String
-            %td A unique username used for presentations. For servers that manage multiple Users, the username serves as a way to namespace presentations.
+            %td A unique username used for sharing items. For servers that manage multiple Users, the username serves as a way to namespace presentations.
 
-      %h2
-        %a#notes.anchor{"aria-hidden" => "true", :href => "#notes"}>
-        Notes
-      %p Note models have the following properties:
+      %h3
+        %a#items.anchor{"aria-hidden" => "true", :href => "#items"}>
+        Items
+      %p Item models have the following properties:
       %table
         %thead
           %tr
@@ -150,47 +167,33 @@
             %th type
             %th description
         %tbody
-          %tr
-            %td id
-            %td Integer
-            %td The id for this note. These ids are relative to the server hosting the data, and may change if a user initiated export and import occurs.
-          %tr
-            %td uuid
-            %td String
-            %td The unique global identifier for this note. This uuid does not change during new data imports.
           %tr
             %td content
             %td Text
-            %td
-              The JSON string encoded content of the note, with the following format:
-              %pre
-                %code
-                  :preserve
-                    {title: _note_title_, text: _note_text_}
+            %td The JSON string encoded structure of the note, encrypted (with some exceptions. See Sharing for details.).
+          %tr
+            %td content_type
+            %td String
+            %td The type of the structure contained in the <code>content</code> field.
           %tr
             %td loc_eek
             %td String
-            %td The locally encrypted encryption key for this note.
+            %td The locally encrypted encryption key for this item.
           %tr
-            %td
-              group_id (
-              %em> optional
-              )
-            %td Integer
-            %td The identifier of the group this note belongs to.
+            %td presentation_name
+            %td String
+            %td The name of this presentation, if applicable. (See Sharing for details).
           %tr
             %td created_at
             %td Date
-            %td The date this note was created.
+            %td The date this item was created.
           %tr
-            %td modified_at
+            %td updated_at
             %td Date
-            %td The date this note was modified.
+            %td The date this item was modified.
 
-      %h2
-        %a#groups.anchor{"aria-hidden" => "true", :href => "#groups"}>
-        Groups
-      %p Group models have the following properties:
+      %h2 Client Structures
+      %p Client structures are stored in the <code>content</code> field of the <code>Item</code> model. All client structures have the following properties:
       %table
         %thead
           %tr
@@ -199,36 +202,24 @@
             %th description
         %tbody
           %tr
-            %td id
-            %td Integer
-            %td The id for this group.
-          %tr
-            %td uuid
-            %td String
-            %td The unique global identifier for this group. This uuid does not change during new data imports.
-          %tr
-            %td name
-            %td String
-            %td The name of the group.
-          %tr
-            %td created_at
-            %td Date
-            %td The date this group was created.
-          %tr
-            %td modified_at
-            %td Date
-            %td The date this group was modified.
+            %td references
+            %td Array
+            %td
+              A metadata array of other `Item` uuids this model is related to and their respective <code>content_type</code>:
+              %br
+              %br
+              %pre
+                %code
+                  :preserve
 
-      %h2
-        %a#presentations.anchor{"aria-hidden" => "true", :href => "#presentations"}>
-        Presentations
-      %p Presentations are how groups and notes are presented to the public. Groups and notes are by default unpresented and hidden from public view. However, a user may choose to make a group or a note publicly viewable.
-      %p
-        A group or a note with a presentation can be accessed by the presentation's
-        = succeed "," do
-          %code url
-        which the server computes and returns with the presentation payload.
-      %p Notes with a presentation are stored on the server without client-side encryption.
+                    [
+                      {uuid: xxxx, content_type: "Tag"},
+                      {uuid: xxxxx, content_type: "Tag"},
+                    ]
+      %h3
+        %a#notes.anchor{"aria-hidden" => "true", :href => "#notes"}>
+        Notes
+      %p Note structure have the following properties:
       %table
         %thead
           %tr
@@ -237,47 +228,29 @@
             %th description
         %tbody
           %tr
-            %td id
-            %td Integer
-            %td The id for this presentation.
-          %tr
-            %td uuid
+            %td title
             %td String
-            %td The unique global identifier for this presentation. This uuid does not change during new data imports.
+            %td The title of the note.
           %tr
-            %td
-              root_path (
-              %em> read-only
-              )
+            %td text
             %td String
-            %td The root path of this presentation, as decided by the server.
+            %td The text body of the note.
+
+      %h3
+        %a#tags.anchor{"aria-hidden" => "true", :href => "#tags"}>
+        Tags
+      %p Tag structure have the following properties:
+      %table
+        %thead
           %tr
-            %td relative_path
+            %th name
+            %th type
+            %th description
+        %tbody
+          %tr
+            %td title
             %td String
-            %td The relative location of this presentation, with respect to the root_path. This path can be chosen by the client user.
-          %tr
-            %td
-              url (
-              %em> read-only
-              )
-            %td String
-            %td The full URL of this presentation. The server decides what this URL is, and should be based off the root and relative path.
-          %tr
-            %td presentable_type
-            %td String
-            %td The class of the object being presented. This can be set to "Note" or "Group".
-          %tr
-            %td presentable_id
-            %td String
-            %td The identifier of the object being presented. This will be the identifier of the Note or Group being presented.
-          %tr
-            %td created_at
-            %td Date
-            %td The date this presentation was created.
-          %tr
-            %td modified_at
-            %td Date
-            %td The date this presentation was modified.
+            %td The title of the tag.
 
       %h1
         %a#api.anchor{"aria-hidden" => "true", :href => "#api"}>
@@ -337,29 +310,10 @@
                 %code {{response.body}}
 
       %h2
-        %a#apigroups.anchor{"aria-hidden" => "true", :href => "#apigroups"}>
-        Groups
-
+        %a#apiitems.anchor{"aria-hidden" => "true", :href => "#apiitems"}>
+        Items
       .endpoints
-        .endpoint{"ng-repeat" => "request in apiData.groups"}
-          .path {{request.verb}} {{request.path}}
-          .desc {{request.desc}}
-          .params
-            %span{"ng-repeat" => "param in request.params"}
-              {{param.name}}
-              %span{"ng-if" => "param.desc"} — {{param.desc}}
-          .responses
-            .strong.small Responses
-            .response{"ng-repeat" => "response in request.responses"}
-              {{response.status}}
-              %pre
-                %code {{response.body}}
-
-      %h2
-        %a#apinotes.anchor{"aria-hidden" => "true", :href => "#apinotes"}>
-        Notes
-      .endpoints
-        .endpoint{"ng-repeat" => "request in apiData.notes"}
+        .endpoint{"ng-repeat" => "request in apiData.items"}
           .path {{request.verb}} {{request.path}}
           .desc {{request.desc}}
           .params
@@ -376,52 +330,67 @@
       %h2
         %a#importexport.anchor{"aria-hidden" => "true", :href => "#importexport"}>
         Import/Export
-      %p The export file is a JSON file that follows a standard format, and is unencrypted.
+      %p The export file is a JSON file of all the user's items, unencrypted.
       %p
-        %strong Export file format:
+        %strong Format:
       %pre
         %code
           :preserve
             {
-                "groups": [
-                    {
-                        "id": "",
-                        "uuid": "",
-                        "name": "",
-                        "created_at": "",
-                        "modified_at": ""
-                    }
-                ],
-                "notes": [
-                    {
-                        "id": "",
-                        "uuid" : "",
-                        "content": "",
-                        "group_id": "",
-                        "created_at": "",
-                        "modified_at": ""
-                    }
-                ],
-                "presentations": [
-                    {
-                        "id": "",
-                        "uuid": "",
-                        "root_path": "",
-                        "relative_path":    "",
-                        "presentable_id" : "",
-                        "presentable_type" : "",
-                        "created_at": "",
-                        "modified_at": ""
-                    }
-                ]
+              "items": [
+                {
+                  "uuid": "3162fe3a-1b5b-4cf5-b88a-afcb9996b23a",
+                  "content_type": "Note",
+                  "presentation_name": null,
+                  "content": {
+                    "references": [
+                      {
+                        "uuid": "901751a0-0b85-4636-93a3-682c4779b634",
+                        "content_type": "Tag"
+                      },
+                      {
+                        "uuid": "023112fe-9066-481e-8a63-f15f27d3f904",
+                        "content_type": "Tag"
+                      }
+                    ],
+                    "title": "...",
+                    "text": "..."
+                  },
+                  "created_at": "2016-12-16T17:37:50.000Z"
+                },
+
+                {
+                  "uuid": "023112fe-9066-481e-8a63-f15f27d3f904",
+                  "content_type": "Tag",
+                  "presentation_name": "essays",
+                  "content": {
+                    "references": [
+                      {
+                        "uuid": "94cba6b7-6b55-41d6-89a5-e3db8be9fbbf",
+                        "content_type": "Note"
+                      },
+                      {
+                        "uuid": "ada3ff00-85fa-4427-a883-652a84736715",
+                        "content_type": "Note"
+                      },
+                      {
+                        "uuid": "3162fe3a-1b5b-4cf5-b88a-afcb9996b23a",
+                        "content_type": "Note"
+                      }
+                    ],
+                    "title": "essays"
+                  },
+                  "created_at": "2016-12-16T17:13:20.000Z"
+                }
+              ]
             }
       %p High-level flow, user wants to switch clients and servers:
       %ol
         %li User chooses "Export" option on client A, which is paired with server A.
-        %li Client produces JSON file with all notes unencrypted.
-        %li User uploads JSON file to client B.
-        %li Client B iterates over notes and encrypts the content of each of them locally.
-        %li Client B sends updated JSON (with encrypted note content) data to server B.
+        %li Client produces JSON file with all items unencrypted.
+        %li User uploads JSON file with client B paired with Server B.
+        %li Client B iterates over items and encrypts the content of each of them locally. (Sharing exceptions apply, see Sharing.)
+        %li Client B sends updated JSON (with encrypted item content) data to server B.
       .endpoints
         .endpoint{"ng-repeat" => "request in apiData.import"}
           .path {{request.verb}} {{request.path}}
@@ -441,16 +410,16 @@
         %a#encryption.anchor{"aria-hidden" => "true", :href => "#encryption"}
         Encryption
       %p Encryption and security should always be top of mind with Standard Notes.
-      %p It is important that there exist a seperation of concerns between the server and the client. That is, the client should not trust the server, and vice versa. Encryption keys are generated by stretching the user's input password using PBKDF2. The resulting 512 bit key is then split in two - the first half is sent to the server as the user's password, and the second half is saved locally as the user's master encryption key. This way, the server can never calculate the encryption key.
+      %p It is important that there exist a separation of concerns between the server and the client. That is, the client should not trust the server, and vice versa. Encryption keys are generated by stretching the user's input password using PBKDF2. The resulting 512 bit key is then split in two - the first half is sent to the server as the user's password, and the second half is saved locally as the user's master encryption key. This way, the server can never calculate the encryption key.
       %p The following are general requirements for clients and servers:
       %ol
         %li
-          Note
+          Item
           %code content
           must be encrypted locally before being sent to server.
         %li Client-server connections must be made securely through SSL/TLS.
         %li Upon receiving data from client, servers should encrypt sensitive data once more before storing with a key only the server knows. The server should decrypt this data before sending back to client.
-      %h4
+      %h2
         %a#encryptionkey.anchor{"aria-hidden" => "true", :href => "#encryptionkey"}
         User Password Encryption and Key Generation
       %p
@@ -482,14 +451,14 @@
               %code> gk
               ) (stored locally and never sent to server.)
       %h2
-        %a#encryptionnotes.anchor{"aria-hidden" => "true", :href => "#encryptionnotes"}
-        Note Encryption
+        %a#encryptionitem.anchor{"aria-hidden" => "true", :href => "#encryptionitem"}
+        Item Encryption
       %p
         %strong Client-side:
-      %p A note is encrypted using a random key locally generated for each note.
-      %p For every note,
+      %p An item is encrypted using a random key locally generated for each item.
+      %p For every item,
       %p
-        %strong If note does not have an associated presentation:
+        %strong If item is not public:
       %ol
         %li
           Generate a random key
@@ -517,49 +486,36 @@
           to the server. (Do not send
           = succeed "," do
             %code ek
-          which can be used to decrypt the note.)
+          which can be used to decrypt the item.)
       %p
-        %strong If note has presentation:
+        %strong If item is public or belongs to public item:
       %ol
         %li
-          Send
+          Set <code>lok_eek</code> to null and send
           %code content
           in plain text to server.
       %p
-        By generating a unique key for every note, this allows for easier changing of a user's password — only the note's
+        Generating a unique key for every item allows for easier changing of a user's password — only the item's
         %code ek
         will have to be re-encrypted with the new
         = succeed "," do
           %code gk
-        and not the entire contents of the note.
+        and not the entire contents of the item.
       %p
         %strong Server-side:
-      %p For every received note:
+      %p For every received item:
       %ol
         %li
           Encrypt
           %code content
-          using server known key and store as
-          = succeed "." do
-            %code enc_content
-          Decrypt before sending back to client as
-          = succeed "." do
-            %code content
+          using server known key and store.
+          Decrypt before sending back to client.
       %h1
         %a#sharing.anchor{"aria-hidden" => "true", :href => "#sharing"}
         Sharing/Publishing
-      %p When a note is shared, it is accessible by the public. To share a note, you create a presentation object on the note.
-      %p When presenting,
-      %ol
-        %li For sharing a single note, the client must remove local encryption from the note.
-        %li For sharing an entire group, the client must remove local encryption for all notes belonging to the group.
-      %p When un-presenting,
-      %ol
-        %li
-          For un-presenting a single note, the client must encrypt the note
-          %strong if
-          the note doesn't belong to a presented group.
-        %li For un-presenting a group, the client must encrypt all notes belonging to this group, except for notes that are individually presented.
+      %p When an item is shared, it is accessible by the public. To share an item, you set a value for <code>presentation_name</code> on the item.
+      %p When presenting, the client must remove local encryption from the item and all other referenced items the client deems related.
+      %p When un-presenting an item, the client must encrypt the item and all other referenced items the client deems related.
       %footer.site-footer
         %span.site-footer-owner
           %a{:href => "https://github.com/standardnotes"} Standard Notes
