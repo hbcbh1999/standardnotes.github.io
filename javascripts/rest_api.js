@@ -90,6 +90,28 @@ var apiData = {
         }
       ]
     },
+
+    {
+      verb : "GET",
+      path : "auth/params",
+      desc : "Returns the parameters used for password generation.",
+      params : [
+        {
+          name : "email",
+          desc : ""
+        }
+      ],
+      responses : [
+        {
+          status : "200",
+          body : "{\"pw_function\" : \"...\", \"pw_alg\" : \"...\", \"pw_cost\" : \"...\", \"pw_key_size\" : \"...\", \"pw_salt\" : \"...\"}"
+        },
+        {
+          status : "5xx",
+          body : "{\"errors\" : []}"
+        }
+      ]
+    },
   ],
 
   users: [
