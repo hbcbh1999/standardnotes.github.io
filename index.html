@@ -475,7 +475,7 @@
           </tr>
           <tr>
             <td>pw_cost</td>
-            <td>The number of iterations to be used by the KDF. On native platforms, this should be around 60,000. However note that non-native clients (web clients not using WebCrypto) will most likely only be able to handle no more than 5,000 iterations.</td>
+            <td>The number of iterations to be used by the KDF. On native platforms, this should be around 60,000. However note that non-native clients (web clients not using WebCrypto) will not be able to handle any more than 5,000 iterations.</td>
           </tr>
           <tr>
             <td>pw_key_size</td>
@@ -483,13 +483,16 @@
           </tr>
           <tr>
             <td>pw_nonce</td>
-            <td>A random string used to compute the password salt. This value is initially created by the client during registration, but does not need to be sent back to the client during future authentication calls. The server stores this to calculate the user's password salt.</td>
+            <td>A random string used to compute the password salt. This value is initially created by the client during registration, but should never be sent back to the client during future authentication calls. The server stores this to calculate the user's password salt.</td>
           </tr>
         </tbody>
       </table>
-      <h2>Key Generation</h2>
+      <h2>
+        <a aria-hidden='true' class='anchor' href='#encryptionkey' id='encryptionkey'></a>
+        Key Generation
+      </h2>
       <h3>Client Instructions</h3>
-      <p>The client's job is to generate a password <code>pw</code> to send to the server as well as a global encryption key <code>gk</code> that the user stores locally to encrypt/decrypt data, given a user inputted password <code>uip</code>.</p>
+      <p>Given a user inputted password <code>uip</code>, the client's job is to generate a password <code>pw</code> to send to the server as well as generate a global encryption key <code>gk</code> that the user stores locally to encrypt/decrypt data.</p>
       <strong>Authentication Steps</strong>
       <ol>
         <li>
@@ -497,7 +500,7 @@
         </li>
         <li>
           <p>Client computes <code>pw</code> and <code>gk</code>:</p>
-          <pre><code>key = pw_function(uip, pw_salt, {alg: pw_alg, keySize: pw_key_size, iterations: pw_cost})&#x000A;pw = key.substring(0, key.length/2)&#x000A;gk = key.substring(key.length/2, key.length)</code></pre>
+          <pre><code>key = pw_function(uip, pw_salt, pw_alg, pw_key_size, pw_cost)&#x000A;pw = key.substring(0, key.length/2)&#x000A;gk = key.substring(key.length/2, key.length)</code></pre>
         </li>
         <li>Client sends <code>pw</code> to the server as the user's "regular" password and stores <code>gk</code> locally. (<code>gk</code> is never sent to the server).</li>
       </ol>
@@ -505,7 +508,7 @@
       <ol>
         <li>Client chooses defaults for auth params (see Recommended Auth Params). Client also generates random string (at least 128 bits) as <code>pw_nonce</code>.</li>
         <li>Client computes <code>salt = SHA1(email + "SN" + pw_nonce)</code>.</li>
-        <li>Client computes <code>pw</code> and <code>gk</code> using step (2) from Authentication Steps, and registers with <code>email</code>, <code>pw</code>, and <code>pw_nonce</code>.</li>
+        <li>Client computes <code>pw</code> and <code>gk</code> using step (2) from Authentication Steps, and registers with <code>email</code>, <code>pw</code>, and <code>pw_nonce</code>, as well as the chosen defaults for auth params.</li>
       </ol>
       <h3>Server Instructions</h3>
       <p>The server must respond to GET requests made to <code>auth/params</code> and return the authentication parameters used for generating that user's password.</p>
@@ -523,7 +526,7 @@
             <li>
               If user doesn't exist:
               <ul>
-                <li>Compute <code>pw_salt = SHA1(email + "SN" + SALT_PSEUDO_NONCE])</code>, where <code>SALT_PSEUDO_NONCE</code> is a static value stored by the server. This way, two consequent requests for a single email don't reveal whether this email is registered. Return <code>pw_salt</code> and recommended defaults as for <code>pw_function</code>, <code>pw_alg</code>, <code>pw_cost</code>, and <code>pw_key_size</code>.</li>
+                <li>Compute <code>pw_salt = SHA1(email + "SN" + SALT_PSEUDO_NONCE)</code>, where <code>SALT_PSEUDO_NONCE</code> is a static value stored by the server. This way, two consequent requests for a single email don't reveal whether this email is registered. Return <code>pw_salt</code> and recommended defaults for <code>pw_function</code>, <code>pw_alg</code>, <code>pw_cost</code>, and <code>pw_key_size</code>.</li>
               </ul>
             </li>
           </ul>

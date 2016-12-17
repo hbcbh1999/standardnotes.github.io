@@ -14,7 +14,23 @@ var apiData = {
           desc : ""
         },
         {
-          name : "password_confirmation",
+          name : "pw_func",
+          desc : ""
+        },
+        {
+          name : "pw_alg",
+          desc : ""
+        },
+        {
+          name : "pw_key_size",
+          desc : ""
+        },
+        {
+          name : "pw_cost",
+          desc : ""
+        },
+        {
+          name : "pw_nonce",
           desc : ""
         }
       ],

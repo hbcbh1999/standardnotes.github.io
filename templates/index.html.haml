@@ -461,18 +461,20 @@
             %td The hashing algorithm of the KDF. Clients should default to SHA512, but this can be changed depending on client cirumstances.
           %tr
             %td pw_cost
-            %td The number of iterations to be used by the KDF. On native platforms, this should be around 60,000. However note that non-native clients (web clients not using WebCrypto) will most likely only be able to handle no more than 5,000 iterations.
+            %td The number of iterations to be used by the KDF. On native platforms, this should be around 60,000. However note that non-native clients (web clients not using WebCrypto) will not be able to handle any more than 5,000 iterations.
           %tr
             %td pw_key_size
             %td The KDF output key size. This should match up with the output length of pw_alg. If you're using SHA512, then this value should be 512.
           %tr
             %td pw_nonce
-            %td A random string used to compute the password salt. This value is initially created by the client during registration, but does not need to be sent back to the client during future authentication calls. The server stores this to calculate the user's password salt.
+            %td A random string used to compute the password salt. This value is initially created by the client during registration, but should never be sent back to the client during future authentication calls. The server stores this to calculate the user's password salt.
 
-      %h2 Key Generation
+      %h2
+        %a#encryptionkey.anchor{"aria-hidden" => "true", :href => "#encryptionkey"}
+        Key Generation
 
       %h3 Client Instructions
-      %p The client's job is to generate a password <code>pw</code> to send to the server as well as a global encryption key <code>gk</code> that the user stores locally to encrypt/decrypt data, given a user inputted password <code>uip</code>.
+      %p Given a user inputted password <code>uip</code>, the client's job is to generate a password <code>pw</code> to send to the server as well as generate a global encryption key <code>gk</code> that the user stores locally to encrypt/decrypt data.
 
       %strong Authentication Steps
       %ol
@@ -483,7 +485,7 @@
           %pre
             %code
               :preserve
-                key = pw_function(uip, pw_salt, {alg: pw_alg, keySize: pw_key_size, iterations: pw_cost})
+                key = pw_function(uip, pw_salt, pw_alg, pw_key_size, pw_cost)
                 pw = key.substring(0, key.length/2)
                 gk = key.substring(key.length/2, key.length)
         %li Client sends <code>pw</code> to the server as the user's "regular" password and stores <code>gk</code> locally. (<code>gk</code> is never sent to the server).
@@ -492,7 +494,7 @@
       %ol
         %li Client chooses defaults for auth params (see Recommended Auth Params). Client also generates random string (at least 128 bits) as <code>pw_nonce</code>.
         %li Client computes <code>salt = SHA1(email + "SN" + pw_nonce)</code>.
-        %li Client computes <code>pw</code> and <code>gk</code> using step (2) from Authentication Steps, and registers with <code>email</code>, <code>pw</code>, and <code>pw_nonce</code>.
+        %li Client computes <code>pw</code> and <code>gk</code> using step (2) from Authentication Steps, and registers with <code>email</code>, <code>pw</code>, and <code>pw_nonce</code>, as well as the chosen defaults for auth params.
 
       %h3 Server Instructions
       %p The server must respond to GET requests made to <code>auth/params</code> and return the authentication parameters used for generating that user's password.
@@ -508,7 +510,7 @@
             %li
               If user doesn't exist:
               %ul
-                %li Compute <code>pw_salt = SHA1(email + "SN" + SALT_PSEUDO_NONCE])</code>, where <code>SALT_PSEUDO_NONCE</code> is a static value stored by the server. This way, two consequent requests for a single email don't reveal whether this email is registered. Return <code>pw_salt</code> and recommended defaults as for <code>pw_function</code>, <code>pw_alg</code>, <code>pw_cost</code>, and <code>pw_key_size</code>.
+                %li Compute <code>pw_salt = SHA1(email + "SN" + SALT_PSEUDO_NONCE)</code>, where <code>SALT_PSEUDO_NONCE</code> is a static value stored by the server. This way, two consequent requests for a single email don't reveal whether this email is registered. Return <code>pw_salt</code> and recommended defaults for <code>pw_function</code>, <code>pw_alg</code>, <code>pw_cost</code>, and <code>pw_key_size</code>.
       %p
         For more information on the salt generation scheme used here, see
         %a{"href" => "https://eprint.iacr.org/2015/387.pdf"} here.
