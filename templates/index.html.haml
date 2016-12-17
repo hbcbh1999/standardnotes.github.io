@@ -469,6 +469,7 @@
             %td pw_nonce
             %td A random string used to compute the password salt. This value is initially created by the client during registration, but does not need to be sent back to the client during future authentication calls. The server stores this to calculate the user's password salt.
 
+      %h2 Key Generation
 
       %h3 Client Instructions
       %p The client's job is to generate a password <code>pw</code> to send to the server as well as a global encryption key <code>gk</code> that the user stores locally to encrypt/decrypt data, given a user inputted password <code>uip</code>.
@@ -525,7 +526,7 @@
             %td Cost
             %td 60,000
           %tr
-            %td Keysize
+            %td Key size
             %td 512
 
       %h2
@@ -595,6 +596,7 @@
       %p When an item is shared, it is accessible by the public. To share an item, you set a value for <code>presentation_name</code> on the item.
       %p When presenting, the client must remove local encryption from the item and all other referenced items the client deems related.
       %p When un-presenting an item, the client must encrypt the item and all other referenced items the client deems related.
+      %p When the server returns an item to the client, it sends back an optional computed value for <code>presentation_url</code>. This URL is decided by the server. The server should also know how to respond to this URL.
       %footer.site-footer
         %span.site-footer-owner
           %a{:href => "https://github.com/standardnotes"} Standard Notes

@@ -487,6 +487,7 @@
           </tr>
         </tbody>
       </table>
+      <h2>Key Generation</h2>
       <h3>Client Instructions</h3>
       <p>The client's job is to generate a password <code>pw</code> to send to the server as well as a global encryption key <code>gk</code> that the user stores locally to encrypt/decrypt data, given a user inputted password <code>uip</code>.</p>
       <strong>Authentication Steps</strong>
@@ -548,7 +549,7 @@
             <td>60,000</td>
           </tr>
           <tr>
-            <td>Keysize</td>
+            <td>Key size</td>
             <td>512</td>
           </tr>
         </tbody>
@@ -633,6 +634,7 @@
       <p>When an item is shared, it is accessible by the public. To share an item, you set a value for <code>presentation_name</code> on the item.</p>
       <p>When presenting, the client must remove local encryption from the item and all other referenced items the client deems related.</p>
       <p>When un-presenting an item, the client must encrypt the item and all other referenced items the client deems related.</p>
+      <p>When the server returns an item to the client, it sends back an optional computed value for <code>presentation_url</code>. This URL is decided by the server. The server should also know how to respond to this URL.</p>
       <footer class='site-footer'>
         <span class='site-footer-owner'>
           <a href='https://github.com/standardnotes'>Standard Notes</a>
