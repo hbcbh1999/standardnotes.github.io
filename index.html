@@ -38,27 +38,27 @@
           <a href='#api'>REST API</a>
           <ul class='no-bullets nested'>
             <li>
-              <a href='#apiauth'>Auth</a>
+              <a href='#api-auth'>Auth</a>
             </li>
             <li>
-              <a href='#apiusers'>Users</a>
+              <a href='#api-users'>Users</a>
             </li>
             <li>
-              <a href='#apiitems'>Items</a>
+              <a href='#api-items'>Items</a>
             </li>
           </ul>
         </li>
         <li>
-          <a href='#importexport'>Import/Export</a>
+          <a href='#import-export'>Import/Export</a>
         </li>
         <li>
           <a href='#encryption'>Encryption</a>
           <ul class='no-bullets nested'>
             <li>
-              <a href='#encryptionkey'>Key Generation</a>
+              <a href='#key-generation'>Key Generation</a>
             </li>
             <li>
-              <a href='#encryptionitem'>Item Encryption</a>
+              <a href='#item-encryption'>Item Encryption</a>
             </li>
           </ul>
         </li>
@@ -242,9 +242,14 @@
             <td>The type of the structure contained in the <code>content</code> field.</td>
           </tr>
           <tr>
-            <td>loc_eek</td>
+            <td>enc_item_key</td>
             <td>String</td>
             <td>The locally encrypted encryption key for this item.</td>
+          </tr>
+          <tr>
+            <td>auth_hash</td>
+            <td>String</td>
+            <td>The HMAC authentication hash for the encrypted content of this item.</td>
           </tr>
           <tr>
             <td>presentation_name</td>
@@ -342,7 +347,7 @@
           <pre><code>Authorization: Bearer _insert_JWT_here_&#x000A;</code></pre>
         </li>
       </ol>
-      <h2><a aria-hidden='true' class='anchor' href='#apiauth' id='apiauth'></a>Auth
+      <h2><a aria-hidden='true' class='anchor' href='#api-auth' id='api-auth'></a>Auth
       </h2>
       <p>Standard Notes uses JSON Web Tokens (JWT) for authentication.</p>
       <div class='endpoints'>
@@ -365,7 +370,7 @@
           </div>
         </div>
       </div>
-      <h2><a aria-hidden='true' class='anchor' href='#apiusers' id='apiusers'></a>Users
+      <h2><a aria-hidden='true' class='anchor' href='#api-users' id='api-users'></a>Users
       </h2>
       <div class='endpoints'>
         <div class='endpoint' ng-repeat='request in apiData.users'>
@@ -387,7 +392,7 @@
           </div>
         </div>
       </div>
-      <h2><a aria-hidden='true' class='anchor' href='#apiitems' id='apiitems'></a>Items
+      <h2><a aria-hidden='true' class='anchor' href='#api-items' id='api-items'></a>Items
       </h2>
       <div class='endpoints'>
         <div class='endpoint' ng-repeat='request in apiData.items'>
@@ -409,7 +414,7 @@
           </div>
         </div>
       </div>
-      <h2><a aria-hidden='true' class='anchor' href='#importexport' id='importexport'></a>Import/Export
+      <h2><a aria-hidden='true' class='anchor' href='#import-export' id='import-export'></a>Import/Export
       </h2>
       <p>The export file is a JSON file of all the user's items, unencrypted.</p>
       <p>
@@ -488,27 +493,27 @@
         </tbody>
       </table>
       <h2>
-        <a aria-hidden='true' class='anchor' href='#encryptionkey' id='encryptionkey'></a>
+        <a aria-hidden='true' class='anchor' href='#key-generation' id='key-generation'></a>
         Key Generation
       </h2>
       <h3>Client Instructions</h3>
-      <p>Given a user inputted password <code>uip</code>, the client's job is to generate a password <code>pw</code> to send to the server as well as generate a global encryption key <code>gk</code> that the user stores locally to encrypt/decrypt data.</p>
+      <p>Given a user inputted password <code>uip</code>, the client's job is to generate a password <code>pw</code> to send to the server as well as generate a master encryption key <code>mk</code> that the user stores locally to encrypt/decrypt data.</p>
       <strong>Authentication Steps</strong>
       <ol>
         <li>
           Client makes GET request with user's email to <code>auth/params</code> to retreive password function, algorithm, salt, cost, and key size.
         </li>
         <li>
-          <p>Client computes <code>pw</code> and <code>gk</code>:</p>
-          <pre><code>key = pw_function(uip, pw_salt, pw_alg, pw_key_size, pw_cost)&#x000A;pw = key.substring(0, key.length/2)&#x000A;gk = key.substring(key.length/2, key.length)</code></pre>
+          <p>Client computes <code>pw</code> and <code>mk</code>:</p>
+          <pre><code>key = pw_function(uip, pw_salt, pw_alg, pw_key_size, pw_cost)&#x000A;pw = key.substring(0, key.length/2)&#x000A;mk = key.substring(key.length/2, key.length)</code></pre>
         </li>
-        <li>Client sends <code>pw</code> to the server as the user's "regular" password and stores <code>gk</code> locally. (<code>gk</code> is never sent to the server).</li>
+        <li>Client sends <code>pw</code> to the server as the user's "regular" password and stores <code>mk</code> locally. (<code>mk</code> is never sent to the server).</li>
       </ol>
       <strong>Registration Steps</strong>
       <ol>
         <li>Client chooses defaults for auth params (see Recommended Auth Params). Client also generates random string (at least 128 bits) as <code>pw_nonce</code>.</li>
         <li>Client computes <code>salt = SHA1(email + "SN" + pw_nonce)</code>.</li>
-        <li>Client computes <code>pw</code> and <code>gk</code> using step (2) from Authentication Steps, and registers with <code>email</code>, <code>pw</code>, and <code>pw_nonce</code>, as well as the chosen defaults for auth params.</li>
+        <li>Client computes <code>pw</code> and <code>mk</code> using step (2) from Authentication Steps, and registers with <code>email</code>, <code>pw</code>, and <code>pw_nonce</code>, as well as the chosen defaults for auth params.</li>
       </ol>
       <h3>Server Instructions</h3>
       <p>The server must respond to GET requests made to <code>auth/params</code> and return the authentication parameters used for generating that user's password.</p>
@@ -558,46 +563,33 @@
         </tbody>
       </table>
       <h2>
-        <a aria-hidden='true' class='anchor' href='#encryptionitem' id='encryptionitem'></a>
+        <a aria-hidden='true' class='anchor' href='#item-encryption' id='item-encryption'></a>
         Item Encryption
       </h2>
       <p>
-        <strong>Client-side:</strong>
+        <strong>Client-side</strong>
       </p>
-      <p>An item is encrypted using a random key locally generated for each item.</p>
-      <p>For every item,</p>
-      <p>
-        <strong>If item is not public:</strong>
-      </p>
+      <p>An item is encrypted using a random key generated for each item.</p>
+      <strong>Encryption:</strong>
+      <p>For every item, if item is not public:</p>
       <ol>
         <li>
-          Generate a random key
-          <code>ek</code>.
+          Generate a random key <code>item_key</code> (at least 256 bits).
         </li>
         <li>
-          Encrypt
-          <code>content</code>
-          using AES with
-          <code>ek</code>
-          as the secret.
+          Split <code>item_key</code> in half; set encryption key <code>ek = first half</code> and authentication key <code>ak = second half</code>.
         </li>
         <li>
-          Generate locally encrypted encryption key
-          <code>loc_eek</code>
-          by encrypting
-          <code>ek</code>
-          using AES and
-          <code>gk</code>
-          as the secret.
+          Encrypt <code>content</code> using AES-CBC-256 and <code>ek</code> as the secret.
         </li>
         <li>
-          Send
-          <code>content</code>
-          and
-          <code>loc_eek</code>
-          to the server. (Do not send
-          <code>ek</code>,
-          which can be used to decrypt the item.)
+          Compute <code>auth_hash = HMAC-SHA256(encrypted content, ak)</code>.
+        </li>
+        <li>
+          Encrypt <code>item_key</code> with user’s master key <code>mk</code>: <code>enc_item_key = AES-CBC-256(item_key, mk)</code>.
+        </li>
+        <li>
+          Send <code>content</code>, <code>enc_item_key</code>, and <code>auth_hash</code> to the server.
         </li>
       </ol>
       <p>
@@ -605,18 +597,26 @@
       </p>
       <ol>
         <li>
-          Set <code>lok_eek</code> to null and send
-          <code>content</code>
-          in plain text to server.
+          Set <code>enc_item_key</code> and <code>auth_hash</code> to null and send <code>content</code> in plain text to server.
         </li>
       </ol>
-      <p>
-        Generating a unique key for every item allows for easier changing of a user's password — only the item's
-        <code>ek</code>
-        will have to be re-encrypted with the new
-        <code>gk</code>,
-        and not the entire contents of the item.
-      </p>
+      <strong>Decryption:</strong>
+      <ol>
+        <li>
+          Decrypt <code>enc_item_key</code> using <code>mk</code> to get <code>item_key</code>.
+        </li>
+        <li>
+          Split <code>item_key</code> in half; set encryption key <code>ek = first half</code> and authentication key <code>ak = second half</code>.
+        </li>
+        <li>
+          Verify authenticity of message by computing <code>auth_hash = HMAC-SHA256(encrypted content, ak)</code>.
+          If this value matches the <code>auth_hash</code> value returned by the server for this item, then proceed.
+          Otherwise, the encrypted content of this item has been tampered with.
+        </li>
+        <li>
+          Decrypt content using <code>ek</code>.
+        </li>
+      </ol>
       <p>
         <strong>Server-side:</strong>
       </p>
@@ -639,12 +639,19 @@
       <p>When un-presenting an item, the client must encrypt the item and all other referenced items the client deems related.</p>
       <p>When the server returns an item to the client, it sends back an optional computed value for <code>presentation_url</code>. This URL is decided by the server. The server should also know how to respond to this URL.</p>
       <footer class='site-footer'>
-        <span class='site-footer-owner'>
-          <a href='https://github.com/standardnotes'>Standard Notes</a>
-          is maintained by
-          <a href='https://github.com/standardnotes'>standardnotes</a>.
-        </span>
+        <h3>
+          <a aria-hidden='true' class='anchor' href='#contact' id='contact'></a>
+          Contact
+        </h3>
+        <p>
+          <a href='mailto:sn@bitar.io'>sn@bitar.io</a>
+        </p>
       </footer>
+      <span class='site-footer-owner'>
+        <a href='https://github.com/standardnotes'>Standard Notes</a>
+        is maintained by
+        <a href='https://github.com/standardnotes'>standardnotes</a>.
+      </span>
     </section>
   </body>
 </html>
