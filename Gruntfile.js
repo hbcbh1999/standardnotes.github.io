@@ -55,6 +55,7 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-newer');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-haml2html');
   grunt.loadNpmTasks('grunt-contrib-sass');
 
