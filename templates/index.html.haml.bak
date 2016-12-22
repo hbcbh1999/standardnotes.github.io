@@ -1,0 +1,621 @@
+!!!
+%html{:lang => "en-us", "ng-app" => "app"}
+  %head
+    %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+    %meta{:charset => "UTF-8"}/
+    %title Standard Notes - Decentralized Personal Notes
+    %meta{:content => "Standard Notes - Decentralized Personal Notes", :name => "apple-mobile-web-app-title"}
+    %meta{:content => "Standard Notes - Decentralized Personal Notes", :name => "application-name"}
+
+    %meta{:content => "An open standard for encryption and ownership of notes. This is personal notes decentralized.", :name => "description"}
+    %meta{:content => "Standard Notes - Decentralized Personal Notes", :name => "twitter:title"}
+    %meta{:content => "An open standard for encryption and ownership of notes. This is personal notes decentralized.", :name => "twitter:description"}
+    %meta{:content => "@standardnotes", :name => "twitter:site"}
+    %meta{:content => "summary", :name => "twitter:card"}
+    %meta{:content => "Standard Notes - Decentralized Personal Notes", :name => "og:title"}
+    %meta{:content => "An open standard for encryption and ownership of notes. This is personal notes decentralized.", :name => "og:description"}
+
+    %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}
+    %link{:href => "vendor/stylesheets/main.css", :media => "screen", :rel => "stylesheet", :type => "text/css"}
+    %script{:src => "https://code.angularjs.org/1.5.8/angular.js"}
+    %script{:src => "javascripts/rest_api.js"}
+    %script{:src => "javascripts/app.js"}
+    %script{:src => "javascripts/gumshoe.min.js"}
+
+  %body{"ng-controller" => "AppCtrl"}
+
+    %section.main-content
+      %ul.menu{"data-gumshoe" => ""}
+        %li
+          %a{"href" => "#preamble"} Preamble
+        %li
+          %a{"href" => "#implementations"} Implementations
+        %li
+          %a{"href" => "#introduction"} Introduction
+        %li
+          %a{"href" => "#models"} Models
+          %ul.no-bullets.nested
+            %li
+              %a{"href" => "#user"} User
+            %li
+              %a{"href" => "#items"} Items
+        %li
+          %a{"href" => "#api"} REST API
+          %ul.no-bullets.nested
+            %li
+              %a{"href" => "#api-auth"} Auth
+            %li
+              %a{"href" => "#api-users"} Users
+            %li
+              %a{"href" => "#api-items"} Items
+        %li
+          %a{"href" => "#import-export"} Import/Export
+        %li
+          %a{"href" => "#encryption"} Encryption
+          %ul.no-bullets.nested
+            %li
+              %a{"href" => "#key-generation"} Key Generation
+            %li
+              %a{"href" => "#item-encryption"} Item Encryption
+        %li
+          %a{"href" => "#sharing"} Sharing/Publishing
+
+      .header
+        %h1.project-name Standard Notes
+        .project-tagline Decentralized Personal Notes. Open, secure, yours.
+
+        .email-subscribe-wrapper
+          .content
+            .title Want to be involved in the future of notes?
+            .subtitle Subscribe to Standard Notes announcements.
+            %link{:href => "//cdn-images.mailchimp.com/embedcode/slim-10_7.css", :rel => "stylesheet", :type => "text/css"}/
+            :css
+              #mc_embed_signup{background:#fff; clear:left; font:14px Helvetica,Arial,sans-serif; width: 100%;}
+            #mc_embed_signup
+              %form#mc-embedded-subscribe-form.validate{:action => "//standardnotes.us14.list-manage.com/subscribe/post?u=f703bdd7fd7cd0923a94b3bd3&id=8523dd24a8", :method => "post", :name => "mc-embedded-subscribe-form", :novalidate => "", :target => "_blank"}
+                #mc_embed_signup_scroll
+                  %input#mce-EMAIL.email{:name => "EMAIL", :placeholder => "email address", :required => "", :type => "email", :value => ""}
+                  / real people should not fill this in and expect good things - do not remove this or risk form bot signups
+                  %div{"aria-hidden" => "true", :style => "position: absolute; left: -5000px;"}
+                    %input{:name => "b_f703bdd7fd7cd0923a94b3bd3_8523dd24a8", :tabindex => "-1", :type => "text", :value => ""}/
+                  .clear
+                    %input#mc-embedded-subscribe.button{:name => "subscribe", :type => "submit", :value => "Subscribe"}
+            .social
+              %a.icon-twitter{"href" => "https://twitter.com/standardnotes", "target" => "_blank"}
+              %a.icon-github{"href" => "https://github.com/standardnotes", "target" => "_blank"}
+              %a.icon-reddit{"href" => "https://www.reddit.com/r/StandardNotes/", "target" => "_blank"}
+
+
+      %p.condensed Protocol Specification
+      %p.condensed.small.faded Version 0.10.0
+      %h2
+        %a#preamble.anchor{"aria-hidden" => "true", :href => "#preamble"}>
+        Preamble
+      %p Notes are an essential part of human life, a tradition dating back tens of thousands of years. A person a thousand years ago may not have had much: a home, some food, family, and quite often, a journal. These thoughts, scribbled down on paper, belonged to no one but the authors themselves.
+      %p Today, our notes are owned by Evernote Incorporated; by Google Incorporated; by Apple Inc. We do not own our own notes. They are owned by for-profit corporations, who are today at the mercy of paranoid governments looking to extend their reach as far as possible.
+      %p These platforms also typically lock you in, so that it's either difficult or inconvenient to transfer to another service.
+      %p Standard Notes is an open specification for a simple and secure system of organizing notes and groups of notes, and also publishing groups and notes onto the internet. Because it is an open protocol, a user need not be locked in to any application. Indeed, a user may even use multiple applications on different platforms to manage the same dataset.
+      %h2
+        %a#implementations.anchor{"aria-hidden" => "true", :href => "#implementations"}>
+        Implementations
+      %a.block-link{"href" => "https://github.com/standardnotes/ruby-server", "target" => "_blank"} Ruby Server Implementation
+      %a.block-link{"href" => "https://github.com/neeto-project/neeto-web-client", "target" => "_blank"} Javascript Client Implementation
+      %a.block-link{"href" => "https://neeto.io", "target" => "_blank"} Web Client
+
+      %h2
+        %a#introduction.anchor{"aria-hidden" => "true", :href => "#introduction"}>
+        Introduction
+      %p This document outlines the specifications for the client-server communications of the Standard Notes system. Any client can communicate with a Standard Notes server as long as it understands the server's requirements.
+      %h1
+        %a#models.anchor{"aria-hidden" => "true", :href => "#models"}>
+        Models
+      %p The protocol consists of models on the server side and what are known as structures on the client side.
+      %strong Server Models
+      %ul
+        %li User
+        %li Item
+      %strong Client Structures
+      %ul
+        %li Note
+        %li Tag
+      %p An <code>Item</code> model has a <code>content</code> field. The <code>content</code> field stores a JSON encoded structure that can be, in this case, a Note or a Tag.
+      %p In this client-server model, servers are to be treated as dumb and uninformed. Because data is encrypted anyway, maintaining relationships between server side models is not very useful.
+      %p The SN model pushes relationship mapping to the client, which clients today have no problem handling. This allows for improvements to be made to the data model on the client level, and not on the difficult-to-change server level.
+      %p (You'll also notice that clients are not restricted to building just a notes app with this data model. You can build almost anything that can represent data as a JSON encoded object. Notes are a good place to start however.)
+
+      %h2 Server Models
+      %p All server models must have the following properties:
+      %table
+        %thead
+          %tr
+            %th name
+            %th type
+            %th description
+        %tbody
+          %tr
+            %td uuid
+            %td String (or uuid for some databases)
+            %td The unique identifier for this model.
+
+
+      %h3
+        %a#user.anchor{"aria-hidden" => "true", :href => "#user"}>
+        User
+      %p A user model has the following properties:
+      %table
+        %thead
+          %tr
+            %th name
+            %th type
+            %th description
+        %tbody
+          %tr
+            %td email
+            %td Integer
+            %td The email of the user.
+          %tr
+            %td password
+            %td String
+            %td
+              The password for this user.
+              %em Note that passwords must be manipulated before being sent to the server. See here.
+          %tr
+            %td
+              username (
+              %em> optional
+              )
+            %td String
+            %td A unique username used for sharing items. For servers that manage multiple Users, the username serves as a way to namespace presentations.
+
+          %tr
+            %td pw_function
+            %td String
+            %td
+              The key derivation function (KDF) for this user. See Encryption for more.
+
+          %tr
+            %td pw_alg
+            %td String
+            %td
+              The algorithm to use for the key derivation function. See Encryption for more.
+
+          %tr
+            %td pw_cost
+            %td String
+            %td
+              The number of iterations to use for the KDF. See Encryption for more.
+
+          %tr
+            %td pw_key_size
+            %td Integer
+            %td
+              The output key size of the KDF. See Encryption for more.
+
+          %tr
+            %td pw_nonce
+            %td String
+            %td
+              A random string generated by the client during registration to compute the password salt. See Encryption for more.
+
+      %h3
+        %a#items.anchor{"aria-hidden" => "true", :href => "#items"}>
+        Items
+      %p Item models have the following properties:
+      %table
+        %thead
+          %tr
+            %th name
+            %th type
+            %th description
+        %tbody
+          %tr
+            %td content
+            %td Text
+            %td The JSON string encoded structure of the note, encrypted (with some exceptions. See Sharing for details.).
+          %tr
+            %td content_type
+            %td String
+            %td The type of the structure contained in the <code>content</code> field.
+          %tr
+            %td enc_item_key
+            %td String
+            %td The locally encrypted encryption key for this item.
+          %tr
+            %td auth_hash
+            %td String
+            %td The HMAC authentication hash for the encrypted content of this item.
+          %tr
+            %td presentation_name
+            %td String
+            %td The name of this presentation, if applicable. (See Sharing for details).
+          %tr
+            %td created_at
+            %td Date
+            %td The date this item was created.
+          %tr
+            %td updated_at
+            %td Date
+            %td The date this item was modified.
+
+      %h2 Client Structures
+      %p Client structures are stored in the <code>content</code> field of the <code>Item</code> model. All client structures have the following properties:
+      %table
+        %thead
+          %tr
+            %th name
+            %th type
+            %th description
+        %tbody
+          %tr
+            %td references
+            %td Array
+            %td
+              A metadata array of other <code>Item</code> uuids this model is related to and their respective <code>content_type</code>:
+              %br
+              %br
+              %pre
+                %code
+                  :preserve
+
+                    [
+                      {uuid: xxxx, content_type: "Tag"},
+                      {uuid: xxxxx, content_type: "Tag"},
+                    ]
+      %h3
+        %a#notes.anchor{"aria-hidden" => "true", :href => "#notes"}>
+        Notes
+      %p Note structure have the following properties:
+      %table
+        %thead
+          %tr
+            %th name
+            %th type
+            %th description
+        %tbody
+          %tr
+            %td title
+            %td String
+            %td The title of the note.
+          %tr
+            %td text
+            %td String
+            %td The text body of the note.
+
+      %h3
+        %a#tags.anchor{"aria-hidden" => "true", :href => "#tags"}>
+        Tags
+      %p Tag structure have the following properties:
+      %table
+        %thead
+          %tr
+            %th name
+            %th type
+            %th description
+        %tbody
+          %tr
+            %td title
+            %td String
+            %td The title of the tag.
+
+      %h1
+        %a#api.anchor{"aria-hidden" => "true", :href => "#api"}>
+        REST API
+      %p General:
+      %ol
+        %li
+          %p
+            All requests after the initial authentication should be authenticated with a JWT with the
+            %code Authorization
+            header:
+          %pre
+            %code
+              :preserve
+                Authorization: Bearer _insert_JWT_here_
+
+      %h2
+        %a#api-auth.anchor{"aria-hidden" => "true", :href => "#api-auth"}>
+        Auth
+
+      %p Standard Notes uses JSON Web Tokens (JWT) for authentication.
+      .endpoints
+        .endpoint{"ng-repeat" => "request in apiData.auth"}
+          .path {{request.verb}} {{request.path}}
+          .desc {{request.desc}}
+          .params
+            Params:
+            %span{"ng-repeat" => "param in request.params"}
+              {{param.name}}
+              %span{"ng-if" => "param.desc"} — {{param.desc}}
+          .responses
+            .strong.small Responses
+            .response{"ng-repeat" => "response in request.responses"}
+              {{response.status}}
+              %pre
+                %code {{response.body}}
+
+      %h2
+        %a#api-users.anchor{"aria-hidden" => "true", :href => "#api-users"}>
+        Users
+      .endpoints
+        .endpoint{"ng-repeat" => "request in apiData.users"}
+          .path {{request.verb}} {{request.path}}
+          .desc {{request.desc}}
+          .params
+            Params:
+            %span{"ng-repeat" => "param in request.params"}
+              {{param.name}}
+              %span{"ng-if" => "param.desc"} — {{param.desc}}
+          .responses
+            .strong.small Responses
+            .response{"ng-repeat" => "response in request.responses"}
+              {{response.status}}
+              %pre
+                %code {{response.body}}
+
+      %h2
+        %a#api-items.anchor{"aria-hidden" => "true", :href => "#api-items"}>
+        Items
+      .endpoints
+        .endpoint{"ng-repeat" => "request in apiData.items"}
+          .path {{request.verb}} {{request.path}}
+          .desc {{request.desc}}
+          .params
+            Params:
+            %span{"ng-repeat" => "param in request.params"}
+              {{param.name}}
+              %span{"ng-if" => "param.desc"} — {{param.desc}}
+          .responses
+            .strong.small Responses
+            .response{"ng-repeat" => "response in request.responses"}
+              {{response.status}}
+              %pre
+                %code {{response.body}}
+
+      %h2
+        %a#import-export.anchor{"aria-hidden" => "true", :href => "#import-export"}>
+        Import/Export
+      %p The export file is a JSON file of all the user's items, unencrypted.
+      %p
+        %strong Format:
+      %pre
+        %code
+          :preserve
+            {
+              "items": [
+                {
+                  "uuid": "3162fe3a-1b5b-4cf5-b88a-afcb9996b23a",
+                  "content_type": "Note",
+                  "presentation_name": null,
+                  "content": {
+                    "references": [
+                      {
+                        "uuid": "901751a0-0b85-4636-93a3-682c4779b634",
+                        "content_type": "Tag"
+                      },
+                      {
+                        "uuid": "023112fe-9066-481e-8a63-f15f27d3f904",
+                        "content_type": "Tag"
+                      }
+                    ],
+                    "title": "...",
+                    "text": "..."
+                  },
+                  "created_at": "2016-12-16T17:37:50.000Z"
+                },
+
+                {
+                  "uuid": "023112fe-9066-481e-8a63-f15f27d3f904",
+                  "content_type": "Tag",
+                  "presentation_name": "essays",
+                  "content": {
+                    "references": [
+                      {
+                        "uuid": "94cba6b7-6b55-41d6-89a5-e3db8be9fbbf",
+                        "content_type": "Note"
+                      },
+                      {
+                        "uuid": "ada3ff00-85fa-4427-a883-652a84736715",
+                        "content_type": "Note"
+                      },
+                      {
+                        "uuid": "3162fe3a-1b5b-4cf5-b88a-afcb9996b23a",
+                        "content_type": "Note"
+                      }
+                    ],
+                    "title": "essays"
+                  },
+                  "created_at": "2016-12-16T17:13:20.000Z"
+                }
+              ]
+            }
+      %h4 High-level flow, user wants to switch clients and servers:
+      %ol
+        %li User chooses "Export" option on client A, which is paired with server A.
+        %li Client produces JSON file with all items unencrypted.
+        %li User uploads JSON file with client B paired with Server B.
+        %li Client B iterates over items and encrypts the content of each of them locally. (Sharing exceptions apply, see Sharing.)
+        %li Client B sends items (with encrypted item content) data to server B as normal POST request to <code>/items</code>.
+      .endpoints
+        .endpoint{"ng-repeat" => "request in apiData.import"}
+          .path {{request.verb}} {{request.path}}
+          .desc {{request.desc}}
+          .params
+            %span{"ng-repeat" => "param in request.params"}
+              {{param.name}}
+              %span{"ng-if" => "param.desc"} — {{param.desc}}
+          .responses
+            .strong.small Responses
+            .response{"ng-repeat" => "response in request.responses"}
+              {{response.status}}
+              %pre
+                %code {{response.body}}
+
+      %h1
+        %a#encryption.anchor{"aria-hidden" => "true", :href => "#encryption"}
+        Encryption
+      %p Encryption and security should always be top of mind with Standard Notes.
+      %p It is important that there exist a separation of concerns between the server and the client. That is, the client should not trust the server, and vice versa.
+      %p
+        Encryption keys are generated by stretching the user's input password using a
+        %a{"href" => "https://en.wikipedia.org/wiki/Key_derivation_function"} key derivation function.
+      %P The resulting key is split in two — the first half is sent to the server as the user's password, and the second half is saved locally as the user's master encryption key. This way, the server can never compute the encryption key.
+      %p SN attempts to make no final judgement on the best key derivation function to use, and instead defers to clients to make this decision. This allows for a future-proof implementation that allows clients to adjust based on present-day security needs.
+      %p Note: client-server connections must be made securely through SSL/TLS.
+      %h4 Elaboration on User model encryption related fields
+      %table
+        %thead
+          %tr
+            %th name
+            %th details
+        %tbody
+          %tr
+            %td pw_function
+            %td The key derivation function (KDF) to use. The current version of SN should only use PBKDF2, but this list can expand to use bcrypt, scrypt, or Argon2 in the future.
+          %tr
+            %td pw_alg
+            %td The hashing algorithm of the KDF. Clients should default to SHA512, but this can be changed depending on client cirumstances.
+          %tr
+            %td pw_cost
+            %td The number of iterations to be used by the KDF. On native platforms, this should be around 60,000. However note that non-native clients (web clients not using WebCrypto) will not be able to handle any more than 5,000 iterations.
+          %tr
+            %td pw_key_size
+            %td The KDF output key size. This should match up with the output length of pw_alg. If you're using SHA512, then this value should be 512.
+          %tr
+            %td pw_nonce
+            %td A random string used to compute the password salt. This value is initially created by the client during registration, but should never be sent back to the client during future authentication calls. The server stores this to calculate the user's password salt.
+
+      %h2
+        %a#key-generation.anchor{"aria-hidden" => "true", :href => "#key-generation"}
+        Key Generation
+
+      %h3 Client Instructions
+      %p Given a user inputted password <code>uip</code>, the client's job is to generate a password <code>pw</code> to send to the server as well as generate a master encryption key <code>mk</code> that the user stores locally to encrypt/decrypt data.
+
+      %strong Authentication Steps
+      %ol
+        %li
+          Client makes GET request with user's email to <code>auth/params</code> to retreive password function, algorithm, salt, cost, and key size.
+        %li
+          %p Client computes <code>pw</code> and <code>mk</code>:
+          %pre
+            %code
+              :preserve
+                key = pw_function(uip, pw_salt, pw_alg, pw_key_size, pw_cost)
+                pw = key.substring(0, key.length/2)
+                mk = key.substring(key.length/2, key.length)
+        %li Client sends <code>pw</code> to the server as the user's "regular" password and stores <code>mk</code> locally. (<code>mk</code> is never sent to the server).
+
+      %strong Registration Steps
+      %ol
+        %li Client chooses defaults for auth params (see Recommended Auth Params). Client also generates random string (at least 128 bits) as <code>pw_nonce</code>.
+        %li Client computes <code>salt = SHA1(email + "SN" + pw_nonce)</code>.
+        %li Client computes <code>pw</code> and <code>mk</code> using step (2) from Authentication Steps, and registers with <code>email</code>, <code>pw</code>, and <code>pw_nonce</code>, as well as the chosen defaults for auth params.
+
+      %h3 Server Instructions
+      %p The server must respond to GET requests made to <code>auth/params</code> and return the authentication parameters used for generating that user's password.
+      %strong Steps
+      %ol
+        %li
+          Server performs search for user with email in request parameters.
+          %ul
+            %li
+              If user exists:
+              %ul
+                %li Compute <code>pw_salt = SHA1(user.email + "SN" + user.pw_nonce)</code>. Return <code>pw_salt</code> and user stored values for <code>pw_function</code>, <code>pw_alg</code>, <code>pw_cost</code>, and <code>pw_key_size</code>.
+            %li
+              If user doesn't exist:
+              %ul
+                %li Compute <code>pw_salt = SHA1(email + "SN" + SALT_PSEUDO_NONCE)</code>, where <code>SALT_PSEUDO_NONCE</code> is a static value stored by the server. This way, two consequent requests for a single email don't reveal whether this email is registered. Return <code>pw_salt</code> and recommended defaults for <code>pw_function</code>, <code>pw_alg</code>, <code>pw_cost</code>, and <code>pw_key_size</code>.
+      %p
+        For more information on the salt generation scheme used here, see
+        %a{"href" => "https://eprint.iacr.org/2015/387.pdf"} here.
+
+      %h4 Recommended Auth Params
+      %table
+        %tbody
+          %tr
+            %td Function
+            %td PBKDF2
+          %tr
+            %td Algorithm
+            %td SHA512
+          %tr
+            %td Cost
+            %td 60,000
+          %tr
+            %td Key size
+            %td 512
+
+      %h2
+        %a#item-encryption.anchor{"aria-hidden" => "true", :href => "#item-encryption"}
+        Item Encryption
+      %p
+        %strong Client-side
+
+      %p An item is encrypted using a random key generated for each item.
+
+      %strong Encryption:
+      %p For every item, if item is not public:
+      %ol
+        %li
+          Generate a random key <code>item_key</code> (at least 256 bits).
+        %li
+          Split <code>item_key</code> in half; set encryption key <code>ek = first half</code> and authentication key <code>ak = second half</code>.
+        %li
+          Encrypt <code>content</code> using AES-CBC-256 and <code>ek</code> as the secret.
+        %li
+          Compute <code>auth_hash = HMAC-SHA256(encrypted content, ak)</code>.
+        %li
+          Encrypt <code>item_key</code> with user’s master key <code>mk</code>: <code>enc_item_key = AES-CBC-256(item_key, mk)</code>.
+        %li
+          Send <code>content</code>, <code>enc_item_key</code>, and <code>auth_hash</code> to the server.
+      %p
+        %strong If item is public or belongs to public item:
+      %ol
+        %li
+          Set <code>enc_item_key</code> and <code>auth_hash</code> to null and send <code>content</code> in plain text to server.
+
+      %strong Decryption:
+      %ol
+        %li
+          Decrypt <code>enc_item_key</code> using <code>mk</code> to get <code>item_key</code>.
+        %li
+          Split <code>item_key</code> in half; set encryption key <code>ek = first half</code> and authentication key <code>ak = second half</code>.
+        %li
+          Verify authenticity of message by computing <code>auth_hash = HMAC-SHA256(encrypted content, ak)</code>.
+          If this value matches the <code>auth_hash</code> value returned by the server for this item, then proceed.
+          Otherwise, the encrypted content of this item has been tampered with.
+        %li
+          Decrypt content using <code>ek</code>.
+
+      %p
+        %strong Server-side:
+      %p For every received item:
+      %ol
+        %li
+          (Optional but recommended)
+          Encrypt
+          %code content
+          using server known key and store.
+          Decrypt before sending back to client.
+      %h1
+        %a#sharing.anchor{"aria-hidden" => "true", :href => "#sharing"}
+        Sharing/Publishing
+      %p When an item is shared, it is accessible by the public. To share an item, you set a value for <code>presentation_name</code> on the item.
+      %p When presenting, the client must remove local encryption from the item and all other referenced items the client deems related.
+      %p When un-presenting an item, the client must encrypt the item and all other referenced items the client deems related.
+      %p When the server returns an item to the client, it sends back an optional computed value for <code>presentation_url</code>. This URL is decided by the server. The server should also know how to respond to this URL.
+
+      %footer.site-footer
+
+        %h3
+          %a#contact.anchor{"aria-hidden" => "true", :href => "#contact"}
+          Contact
+        %p
+          %a{"href" => "mailto:sn@bitar.io"} sn@bitar.io
+
+      %span.site-footer-owner
+        %a{:href => "https://github.com/standardnotes"} Standard Notes
+        is maintained by
+        = succeed "." do
+          %a{:href => "https://github.com/standardnotes"} standardnotes

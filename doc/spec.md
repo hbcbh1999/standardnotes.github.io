@@ -20,11 +20,11 @@ Standard Notes is an open specification for a simple and secure system of organi
 
 [Web Client](https://neeto.io)
 
-## [](#introduction) Introduction
+<h1><a aria-hidden='true' class='anchor' href='#introduction' id='introduction'></a>Introduction</h1>
 
 This document outlines the specifications for the client-server communications of the Standard Notes system. Any client can communicate with a Standard Notes server as long as it understands the server's requirements.
 
-# [](#models) Models
+<h1><a aria-hidden='true' class='anchor' href='#models' id='models'></a>Models</h1>
 
 The protocol consists of models on the server side and what are known as structures on the client side.
 

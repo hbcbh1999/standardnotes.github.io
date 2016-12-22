@@ -72,12 +72,10 @@ module.exports = function(grunt) {
         ],
 
         options: {
-         preCompile: function(src, context) {},
-         postCompile: function(src, context) {},
          templateContext: {},
-         contextBinder: false,
+         contextBinder: true,
          contextBinderMark: '@@@',
-         autoTemplate: true,
+         autoTemplate: false,
          autoTemplateFormat: 'jst',
          markdownOptions: {
            gfm: true,
