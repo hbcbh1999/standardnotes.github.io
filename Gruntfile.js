@@ -12,8 +12,16 @@ module.exports = function(grunt) {
       },
 
       js: {
-        files: ['avascripts/**/*.js'],
+        files: ['javascripts/**/*.js'],
         tasks: ['concat'],
+        options: {
+          spawn: false,
+        },
+      },
+
+      markdown: {
+        files: ['doc/**/*.md'],
+        tasks: ['markdown'],
         options: {
           spawn: false,
         },
@@ -51,12 +59,44 @@ module.exports = function(grunt) {
         }
       },
     },
+
+    markdown: {
+      all: {
+        files: [
+          {
+            expand: true,
+            src: 'doc/*.md',
+            dest: 'doc/html/',
+            ext: '.html'
+          }
+        ],
+
+        options: {
+         preCompile: function(src, context) {},
+         postCompile: function(src, context) {},
+         templateContext: {},
+         contextBinder: false,
+         contextBinderMark: '@@@',
+         autoTemplate: true,
+         autoTemplateFormat: 'jst',
+         markdownOptions: {
+           gfm: true,
+           highlight: 'manual',
+           codeLines: {
+             before: '<span>',
+             after: '</span>'
+           }
+         }
+       }
+      }
+  }
   });
 
   grunt.loadNpmTasks('grunt-newer');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-haml2html');
   grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-markdown');
 
-  grunt.registerTask('default', ['haml', 'sass']);
+  grunt.registerTask('default', ['haml', 'markdown', 'sass']);
 };
