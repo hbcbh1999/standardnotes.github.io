@@ -11,13 +11,13 @@ module.exports = function(grunt) {
         },
       },
 
-      js: {
-        files: ['javascripts/**/*.js'],
-        tasks: ['concat'],
-        options: {
-          spawn: false,
-        },
-      },
+      // js: {
+      //   files: ['javascripts/**/*.js'],
+      //   tasks: ['concat'],
+      //   options: {
+      //     spawn: false,
+      //   },
+      // },
 
       markdown: {
         files: ['doc/**/*.md'],

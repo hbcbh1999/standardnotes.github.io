@@ -113,20 +113,23 @@
   </head>
   <body>  
     <p>Protocol Specification</p>
-<p>Version 0.10.0</p>
-<h2 id="-preamble-preamble"><a href="#preamble"></a> Preamble</h2>
+<p>Version 0.10.0
+Preamble</p>
+<h1><a id='preamble'></a>Preamble</h1>
+
 <p>Notes are an essential part of human life, a tradition dating back tens of thousands of years. A person a thousand years ago may not have had much: a home, some food, family, and quite often, a journal. These thoughts, scribbled down on paper, belonged to no one but the authors themselves.</p>
 <p>Today, our notes are owned by Evernote Incorporated; by Google Incorporated; by Apple Inc. We do not own our own notes. They are owned by for-profit corporations, who are today at the mercy of paranoid governments looking to extend their reach as far as possible.</p>
 <p>These platforms also typically lock you in, so that it&#39;s either difficult or inconvenient to transfer to another service.</p>
 <p>Standard Notes is an open specification for a simple and secure system of organizing notes and groups of notes, and also publishing groups and notes onto the internet. Because it is an open protocol, a user need not be locked in to any application. Indeed, a user may even use multiple applications on different platforms to manage the same dataset.</p>
-<h2 id="-implementations-implementations"><a href="#implementations"></a> Implementations</h2>
+<h1><a id='implementations'></a>Implementations</h1>
+
 <p><a href="https://github.com/standardnotes/ruby-server">Ruby Server Implementation</a></p>
 <p><a href="https://github.com/neeto-project/neeto-web-client">Javascript Client Implementation</a></p>
 <p><a href="https://neeto.io">Web Client</a></p>
-<h1><a aria-hidden='true' class='anchor' href='#introduction' id='introduction'></a>Introduction</h1>
+<h1><a id='introduction'></a>Introduction</h1>
 
 <p>This document outlines the specifications for the client-server communications of the Standard Notes system. Any client can communicate with a Standard Notes server as long as it understands the server&#39;s requirements.</p>
-<h1><a aria-hidden='true' class='anchor' href='#models' id='models'></a>Models</h1>
+<h1><a id='models'></a>Models</h1>
 
 <p>The protocol consists of models on the server side and what are known as structures on the client side.</p>
 <p><strong>Server Models</strong></p>
@@ -161,7 +164,8 @@
 </tr>
 </tbody>
 </table>
-<h3 id="-user-user"><a href="#user"></a>User</h3>
+<h1><a id='user'></a>User</h1>
+
 <p>A user model has the following properties:</p>
 <table>
 <thead>
@@ -214,7 +218,8 @@
 </tr>
 </tbody>
 </table>
-<h3 id="-items-items"><a href="#items"></a>Items</h3>
+<h1><a id='items'></a>Items</h1>
+
 <p>Item models have the following properties:</p>
 <table>
 <thead>
@@ -285,7 +290,8 @@
   {<span class="hljs-string">uuid:</span> xxxx, <span class="hljs-string">content_type:</span> <span class="hljs-string">"Tag"</span>},
   {<span class="hljs-string">uuid:</span> xxxxx, <span class="hljs-string">content_type:</span> <span class="hljs-string">"Tag"</span>},
 ]
-</code></pre><h3 id="-notes-notes"><a href="#notes"></a>Notes</h3>
+</code></pre><h1><a id='notes'></a>Notes</h1>
+
 <p>Note structure have the following properties:</p>
 <table>
 <thead>
@@ -308,7 +314,8 @@
 </tr>
 </tbody>
 </table>
-<h3 id="-tags-tags"><a href="#tags"></a>Tags</h3>
+<h1><a id='tags'></a>Tags</h1>
+
 <p>Tag structure have the following properties:</p>
 <table>
 <thead>
@@ -326,14 +333,16 @@
 </tr>
 </tbody>
 </table>
-<h1 id="-api-rest-api"><a href="#api"></a>REST API</h1>
+<h1><a id='api'></a>REST API</h1>
+
 <p>General:</p>
 <ol>
 <li><p>All requests after the initial authentication should be authenticated with a JWT with the <code>Authorization</code> header:</p>
 <pre><code><span class="hljs-attribute">Authorization</span>: <span class="hljs-string">Bearer _insert_JWT_here_</span>
 </code></pre></li>
 </ol>
-<h2 id="-api-auth-auth"><a href="#api-auth"></a>Auth</h2>
+<h1><a id='api-auth'></a>Auth</h1>
+
 <p>Standard Notes uses JSON Web Tokens (JWT) for authentication.</p>
 <h4 id="post-auth">POST auth</h4>
 <p><strong>Registers a user and returns a JWT</strong></p>
@@ -369,7 +378,8 @@ Responses
 <pre><code>{"<span class="hljs-attribute">pw_function</span>" : <span class="hljs-value"><span class="hljs-string">"..."</span></span>, "<span class="hljs-attribute">pw_alg</span>" : <span class="hljs-value"><span class="hljs-string">"..."</span></span>, "<span class="hljs-attribute">pw_cost</span>" : <span class="hljs-value"><span class="hljs-string">"..."</span></span>, "<span class="hljs-attribute">pw_key_size</span>" : <span class="hljs-value"><span class="hljs-string">"..."</span></span>, "<span class="hljs-attribute">pw_salt</span>" : <span class="hljs-value"><span class="hljs-string">"..."</span></span>}
 </code></pre><p>5xx</p>
 <pre><code>{"<span class="hljs-attribute">errors</span>" : <span class="hljs-value">[]</span>}
-</code></pre><h2 id="-api-users-users"><a href="#api-users"></a>Users</h2>
+</code></pre><h1><a id='api-users'></a>Users</h1>
+
 <h4 id="get-users-me">GET users/me</h4>
 <p><strong>Returns the current user as well as all the user&#39;s items.</strong></p>
 <p><em>Params:</em></p>
@@ -378,7 +388,8 @@ Responses
 <pre><code>{"<span class="hljs-attribute">email</span>" : <span class="hljs-value"><span class="hljs-string">"..."</span></span>, "<span class="hljs-attribute">items</span>" : <span class="hljs-value">[]</span>}
 </code></pre><p>5xx</p>
 <pre><code>{"<span class="hljs-attribute">errors</span>" : <span class="hljs-value">[]</span>}
-</code></pre><h2 id="-api-items-items"><a href="#api-items"></a>Items</h2>
+</code></pre><h1><a id='api-items'></a>Items</h1>
+
 <h4 id="get-items">GET items</h4>
 <p><strong>Gets all items for current user.</strong></p>
 <p><em>Params: updated_after  — Optional. Return only items modified after a certain date.</em></p>
@@ -411,7 +422,8 @@ Responses
 <pre><code><span class="hljs-title">No</span> Content
 </code></pre><p>5xx</p>
 <pre><code>{"<span class="hljs-attribute">errors</span>" : <span class="hljs-value">[]</span>}
-</code></pre><h2 id="-import-export-import-export"><a href="#import-export"></a>Import/Export</h2>
+</code></pre><h1><a id='import-export'></a>Import/Export</h1>
+
 <p>The export file is a JSON file of all the user&#39;s items, unencrypted.</p>
 <p><strong>Format:</strong></p>
 <pre><code>{
@@ -470,7 +482,8 @@ Responses
 <li>Client B iterates over items and encrypts the content of each of them locally. (Sharing exceptions apply, see Sharing.)</li>
 <li>Client B sends items (with encrypted item content) data to server B as normal POST request to <code>/items</code>.</li>
 </ol>
-<h1 id="-encryption-encryption"><a href="#encryption"></a>Encryption</h1>
+<h1><a id='encryption'></a>Encryption</h1>
+
 <p>Encryption and security should always be top of mind with Standard Notes.</p>
 <p>It is important that there exist a separation of concerns between the server and the client. That is, the client should not trust the server, and vice versa.</p>
 <p>Encryption keys are generated by stretching the user&#39;s input password using a <a href="https://en.wikipedia.org/wiki/Key_derivation_function">key derivation function.</a></p>
@@ -508,7 +521,8 @@ Responses
 </tr>
 </tbody>
 </table>
-<h2 id="-key-generation-key-generation"><a href="#key-generation"></a>Key Generation</h2>
+<h1><a id='key-generation'></a>Key Generation</h1>
+
 <h3 id="client-instructions">Client Instructions</h3>
 <p>Given a user inputted password <code>uip</code>, the client&#39;s job is to generate a password <code>pw</code> to send to the server as well as generate a master encryption key <code>mk</code> that the user stores locally to encrypt/decrypt data.</p>
 <p><strong>Authentication Steps</strong></p>
@@ -572,7 +586,8 @@ mk = key.<span class="hljs-function"><span class="hljs-title">substring</span><s
 </tr>
 </tbody>
 </table>
-<h2 id="-item-encryption-item-encryption"><a href="#item-encryption"></a>Item Encryption</h2>
+<h1><a id='item-encryption'></a>Item Encryption</h1>
+
 <p><strong>Client-side</strong></p>
 <p>An item is encrypted using a random key generated for each item.</p>
 <p><strong>Encryption:</strong></p>
@@ -608,7 +623,8 @@ mk = key.<span class="hljs-function"><span class="hljs-title">substring</span><s
 <ol>
 <li>(Optional but recommended) Encrypt <code>content</code> using server known key and store. Decrypt before sending back to client.</li>
 </ol>
-<h1 id="-sharing-sharing-publishing"><a href="#sharing"></a>Sharing/Publishing</h1>
+<h1><a id='sharing'></a>Sharing/Publishing</h1>
+
 <p>When an item is shared, it is accessible by the public. To share an item, you set a value for <code>presentation_name</code> on the item.</p>
 <p>When presenting, the client must remove local encryption from the item and all other referenced items the client deems related.</p>
 <p>When un-presenting an item, the client must encrypt the item and all other referenced items the client deems related.</p>
