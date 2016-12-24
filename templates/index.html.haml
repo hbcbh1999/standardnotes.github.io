@@ -3,17 +3,17 @@
   %head
     %meta{:content => "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}
     %meta{:charset => "UTF-8"}
-    %title Standard Notes - Decentralized Personal Notes
-    %meta{:content => "Standard Notes - Decentralized Personal Notes", :name => "apple-mobile-web-app-title"}
-    %meta{:content => "Standard Notes - Decentralized Personal Notes", :name => "application-name"}
+    %title Standard Notes - durable and growth-resistant personal notes
+    %meta{:content => "Standard Notes - durable and growth-resistant personal notes", :name => "apple-mobile-web-app-title"}
+    %meta{:content => "Standard Notes - durable and growth-resistant personal notes", :name => "application-name"}
     %base{:href => "/"}
-    %meta{:content => "An open standard for encryption and ownership of notes. This is personal notes decentralized.", :name => "description"}
-    %meta{:content => "Standard Notes - Decentralized Personal Notes", :name => "twitter:title"}
-    %meta{:content => "An open standard for encryption and ownership of notes. This is personal notes decentralized.", :name => "twitter:description"}
+    %meta{:content => "Standard Notes is a basic notes app that delivers only the essentials in note taking. Because of its simplicity and resistance to growth, users can count on durability and convenience.", :name => "description"}
+    %meta{:content => "Standard Notes - durable and growth-resistant personal notes", :name => "twitter:title"}
+    %meta{:content => "Standard Notes is a basic notes app that delivers only the essentials in note taking. Because of its simplicity and resistance to growth, users can count on durability and convenience.", :name => "twitter:description"}
     %meta{:content => "@standardnotes", :name => "twitter:site"}
     %meta{:content => "summary", :name => "twitter:card"}
-    %meta{:content => "Standard Notes - Decentralized Personal Notes", :name => "og:title"}
-    %meta{:content => "An open standard for encryption and ownership of notes. This is personal notes decentralized.", :name => "og:description"}
+    %meta{:content => "Standard Notes - durable and growth-resistant personal notes", :name => "og:title"}
+    %meta{:content => "Standard Notes is a basic notes app that delivers only the essentials in note taking. Because of its simplicity and resistance to growth, users can count on durability and convenience.", :name => "og:description"}
 
     %meta{:content => "width=device-width, initial-scale=1", :name => "viewport"}
     %link{:href => "vendor/stylesheets/main.css", :media => "screen", :rel => "stylesheet", :type => "text/css"}
@@ -24,48 +24,13 @@
 
   %body{"ng-controller" => "AppCtrl"}
     %section.main-content
-      %ul.menu{"data-gumshoe" => ""}
-        %li
-          %a{"href" => "#preamble"} Preamble
-        %li
-          %a{"href" => "#implementations"} Implementations
-        %li
-          %a{"href" => "#introduction"} Introduction
-        %li
-          %a{"href" => "#models"} Models
-          %ul.no-bullets.nested
-            %li
-              %a{"href" => "#user"} User
-            %li
-              %a{"href" => "#items"} Items
-        %li
-          %a{"href" => "#api"} REST API
-          %ul.no-bullets.nested
-            %li
-              %a{"href" => "#api-auth"} Auth
-            %li
-              %a{"href" => "#api-users"} Users
-            %li
-              %a{"href" => "#api-items"} Items
-        %li
-          %a{"href" => "#import-export"} Import/Export
-        %li
-          %a{"href" => "#encryption"} Encryption
-          %ul.no-bullets.nested
-            %li
-              %a{"href" => "#key-generation"} Key Generation
-            %li
-              %a{"href" => "#item-encryption"} Item Encryption
-        %li
-          %a{"href" => "#sharing"} Sharing/Publishing
-
       .header
         %h1.project-name Standard Notes
-        .project-tagline Decentralized Personal Notes. Open, secure, yours.
+        .project-tagline Durable and growth-resistant personal notes.
 
         .email-subscribe-wrapper
           .content
-            .title Want to be involved in the future of notes?
+            .title Want to be stay up to date with Standard Notes news?
             .subtitle Subscribe to Standard Notes announcements.
             %link{:href => "//cdn-images.mailchimp.com/embedcode/slim-10_7.css", :rel => "stylesheet", :type => "text/css"}/
             :css
@@ -92,9 +57,3 @@
           Contact
         %p
           %a{"href" => "mailto:sn@bitar.io"} sn@bitar.io
-
-      %span.site-footer-owner
-        %a{:href => "https://github.com/standardnotes"} Standard Notes
-        is maintained by
-        = succeed "." do
-          %a{:href => "https://github.com/standardnotes"} standardnotes
