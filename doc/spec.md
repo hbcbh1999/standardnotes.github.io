@@ -47,7 +47,7 @@ Then, choose a Standard File server to host your data:
 
 *Note: because your data is encrypted before being sent to the server, it is not important to "trust" these servers. This means you can choose any server and rest assured that your data is secure.*
 
-If you're tech savvy, you can even [host your own Standard File server]().
+If you're tech savvy, you can even [host your own Standard File server](https://github.com/standardfile/ruby-server/wiki/Deploying-a-private-Standard-File-server-with-Amazon-EC2-and-Nginx).
 
 You'll enter this server information inside the Standard Notes application. You'll then be able to sign in or register on this server.
 
