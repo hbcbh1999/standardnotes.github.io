@@ -36,14 +36,14 @@ To get started, download a Standard Notes app for your platform.
 
 - [Web](https://app.standardnotes.org)
 - [iOS](https://github.com/standardnotes/iOS)
-- [Mac]() (Coming Soon)
-- [PC]() (Coming Soon)
-- [Linux]() (Coming Soon)
+- Mac (in development)
+- PC (in development)
+- Linux (in development)
 
 Then, choose a Standard File server to host your data:
 
 - https://n3.standardnotes.org
-- https://n1.standardnotes.co.uk (Coming Soon)
+- https://n1.standardnotes.co.uk (in development)
 
 *Note: because your data is encrypted before being sent to the server, it is not important to "trust" these servers. This means you can choose any server and rest assured that your data is secure.*
 
