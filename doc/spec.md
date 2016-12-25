@@ -34,16 +34,16 @@ And because data portability and durability are of utmost importance, all Standa
 
 To get started, download a Standard Notes app for your platform.
 
-- [Web]()
-- [iOS]()
-- [Mac]()
-- [PC]()
-- [Linux]()
+- [Web](https://app.standardnotes.org)
+- [iOS](https://github.com/standardnotes/iOS)
+- [Mac]() (Coming Soon)
+- [PC]() (Coming Soon)
+- [Linux]() (Coming Soon)
 
 Then, choose a Standard File server to host your data:
 
 - https://n3.standardnotes.org
-- https://n1.standardnotes.co.uk
+- https://n1.standardnotes.co.uk (Coming Soon)
 
 *Note: because your data is encrypted before being sent to the server, it is not important to "trust" these servers. This means you can choose any server and rest assured that your data is secure.*
 
