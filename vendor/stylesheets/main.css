@@ -574,10 +574,11 @@ a:hover {
 }
 
 .project-tagline {
-  margin-top: -10px;
-  margin-bottom: 20px;
+  margin-top: 0px;
+  margin-bottom: 30px;
   font-weight: normal;
   font-size: 24px;
+  max-width: 700px;
 }
 
 .main-content :first-child {
@@ -773,6 +774,42 @@ a:hover {
     font-size: 0.9rem;
   }
 }
+.downloads-container .download-item {
+  display: inline-block;
+  width: 75px;
+  margin-right: 40px;
+}
+.downloads-container .download-item.na {
+  opacity: 0.4;
+}
+.downloads-container .download-item .icon {
+  display: block;
+}
+.downloads-container .download-item .links {
+  display: block;
+}
+.downloads-container .download-item .links a.link {
+  color: black;
+  font-weight: bold;
+  text-decoration: underline;
+}
+.downloads-container .download-item .links a.link.na {
+  text-decoration: none;
+}
+.downloads-container .download-item .links a.link.block {
+  display: block;
+  text-align: center;
+}
+.downloads-container .download-item .links a.link.inline {
+  display: inline-block;
+  margin: 0px 2px;
+}
+.downloads-container .download-item .message {
+  display: block;
+  font-size: 10px;
+  text-align: center;
+}
+
 .no-bullets {
   list-style-type: none;
 }
@@ -818,6 +855,7 @@ a:hover {
   position: relative;
   max-width: 620px;
   margin-bottom: 40px;
+  margin-top: 60px;
 }
 .email-subscribe-wrapper .content {
   border: 1px solid rgba(0, 0, 0, 0.2);
