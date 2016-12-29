@@ -93,7 +93,7 @@ What makes software difficult to maintain is a growing feature set that constant
 <br>
 We love community contributions. If you're a notes-enthusiast, share with your friends and followers, and help create a more sustainable notes environment. If you're a developer, check out our [repositories](https://github.com/standardnotes) on Github and see where you can help. You can also host your own Standard File server for other community members to use and join. If you launch your own community server, [let us know](mailto:standardnotes@bitar.io).
 
-You can also join the [Standard Notes Slack channel](https://slackin-cynmrzmiph.now.sh/) to get involved.
+You can also join the [Standard Notes Slack channel](https://slackin-ekhdyygaer.now.sh/) to get involved.
 
 **How can I get in touch?**
 <br>
