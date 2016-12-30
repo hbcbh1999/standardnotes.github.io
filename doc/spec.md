@@ -38,9 +38,9 @@ To get started, download a Standard Notes app for your platform.
 
 - [Web](https://app.standardnotes.org)
 - [iOS](https://github.com/standardnotes/iOS)
-- [Mac](https://github.com/standardnotes/electron/releases/download/v0.0.1/standard-notes-v0.0.1-mac-x64.zip)
-- [PC](https://github.com/standardnotes/electron/releases/download/v0.0.1/standard-notes-v0.0.1-win32-x64.zip)
-- [Linux](https://github.com/standardnotes/electron/releases/download/v0.0.1/standard-notes-v0.0.1-linux-x64.zip)
+- [Mac](https://github.com/standardnotes/electron/releases/download/v0.0.2/Standard.Notes-mac-x64.zip)
+- [Windows](https://github.com/standardnotes/electron/releases/download/v0.0.2/Standard.Notes-windows-x64.zip)
+- [Linux](https://github.com/standardnotes/electron/releases/download/v0.0.2/Standard.Notes-linux-x64.zip)
 - Android (In development)
 
 Then, choose a Standard File server to host your data:
