@@ -471,8 +471,7 @@ decryptResponseItems(responseItems) {
 		
 		let contentString = item["content"]
 		
-		// check if its encrypted (has "001" prefix)
-		
+		// check if its encrypted - has "001" prefix
 		if contentString.hasPrefix("001") {
 			let keys = self.keysForItem(item["enc_item_key"])
 			let ek = keys["ek"]

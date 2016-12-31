@@ -478,8 +478,7 @@ keysForItem(item) {
 
         <span class="hljs-keyword">let</span> <span class="hljs-variable">contentString =</span> item[<span class="hljs-string">"content"</span>]
 
-        // check <span class="hljs-keyword">if</span> its encrypted (has <span class="hljs-string">"001"</span> prefix)
-
+        // check <span class="hljs-keyword">if</span> its encrypted - has <span class="hljs-string">"001"</span> prefix
         <span class="hljs-keyword">if</span> contentString.hasPrefix(<span class="hljs-string">"001"</span>) {
             <span class="hljs-keyword">let</span> <span class="hljs-variable">keys =</span> self.keysForItem(item[<span class="hljs-string">"enc_item_key"</span>])
             <span class="hljs-keyword">let</span> <span class="hljs-variable">ek =</span> keys[<span class="hljs-string">"ek"</span>]
