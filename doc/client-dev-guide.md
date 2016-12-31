@@ -169,7 +169,7 @@ handleResponseItems(responseItems) {
 **CryptoHelper**
 
 ```
-/* Modifies response items in place */
+// Modifies response items in place
 decryptResponseItems(responseItems) {
 	for item in responseItems {
 		self.decryptItem(item);
@@ -438,8 +438,8 @@ encrypt(message, hexKey) {
 
 AES128CBCEncrypt is the encryption algorithm, which will depend on platform. 128 represents the block size. The parameters used for the AES function are:
 
-Mode: CBC
-Padding: Pkcs7
+- Mode: CBC
+- Padding: Pkcs7
 
 Note that no IV is used, since our keys are random and long enough. If your platform algorithm requires an IV be passed, just pass a blank string, or its data equivalent.
 
@@ -537,6 +537,23 @@ sync() {
 ```
 
 Done.
+
+### Deleting an item
+
+**ItemManager**
+
+```
+setItemToBeDeleted(item) {
+    item.deleted = true
+    item.dirty = true
+}
+```
+
+Then sync.
+
+After successful sync, delete the item from your local database.
+
+### Presentations
 
 Finally, let's talk about presentations. An item that is presented means it is public, and should not be encrypted.
 

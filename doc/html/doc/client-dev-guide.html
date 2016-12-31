@@ -259,10 +259,10 @@ var params = {password: pw, email: email};
     ItemManager<span class="hljs-string">.sharedInstance.mapResponseItemsToLocalItems(responseItems)</span>;
 }</span>
 </code></pre><p><strong>CryptoHelper</strong></p>
-<pre><code>/* Modifies response items <span class="hljs-keyword">in</span> place */
+<pre><code><span class="hljs-comment">// Modifies response items in place</span>
 decryptResponseItems(responseItems) {
-    <span class="hljs-keyword">for</span> <span class="hljs-property">item</span> <span class="hljs-keyword">in</span> responseItems {
-        self.decryptItem(<span class="hljs-property">item</span>);
+    <span class="hljs-keyword">for</span> item <span class="hljs-keyword">in</span> responseItems {
+        <span class="hljs-keyword">self</span><span class="hljs-variable">.decryptItem</span>(item);
     }
 }
 </code></pre><p>We&#39;ll go over the <code>decryptItem</code> function further below.</p>
@@ -454,8 +454,10 @@ keysForItem(item) {
     <span class="hljs-keyword">return</span> resultData.toBase64String()
 }
 </code></pre><p>AES128CBCEncrypt is the encryption algorithm, which will depend on platform. 128 represents the block size. The parameters used for the AES function are:</p>
-<p>Mode: CBC
-Padding: Pkcs7</p>
+<ul>
+<li>Mode: CBC</li>
+<li>Padding: Pkcs7</li>
+</ul>
 <p>Note that no IV is used, since our keys are random and long enough. If your platform algorithm requires an IV be passed, just pass a blank string, or its data equivalent.</p>
 <p>Next let&#39;s compute the authentication hash:</p>
 <pre><code>computeAuthHash(message, key) {
@@ -531,6 +533,15 @@ Padding: Pkcs7</p>
     })
 }
 </code></pre><p>Done.</p>
+<h3 id="deleting-an-item">Deleting an item</h3>
+<p><strong>ItemManager</strong></p>
+<pre><code>setItemToBeDeleted(<span class="hljs-property">item</span>) {
+    <span class="hljs-property">item</span>.deleted = <span class="hljs-constant">true</span>
+    <span class="hljs-property">item</span>.dirty = <span class="hljs-constant">true</span>
+}
+</code></pre><p>Then sync.</p>
+<p>After successful sync, delete the item from your local database.</p>
+<h3 id="presentations">Presentations</h3>
 <p>Finally, let&#39;s talk about presentations. An item that is presented means it is public, and should not be encrypted.</p>
 <p>Any item can be shared, or presented, simply by assigning it a <code>presentation_name</code> value. The server decides what the URL for this item would be given a presentation name. </p>
 <p>It is up to the client however to decide which items are related to a presented item, and therefore must also be decrypted.</p>
